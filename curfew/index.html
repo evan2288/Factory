@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Curfew</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="game"></div>
+
+  <div id="hud" class="hidden">
+    <div id="objective"></div>
+    <div id="eye"><div id="eye-fill"></div><span>●</span></div>
+    <div id="status"></div>
+    <div id="prompt"></div>
+    <div id="stamina"><div id="stamina-fill"></div></div>
+    <div id="crosshair"></div>
+    <div id="message"></div>
+  </div>
+  <div id="vignette"></div>
+  <div id="locker-view" class="hidden"></div>
+  <div id="danger"></div>
+
+  <div id="menu" class="screen">
+    <h1>CURFEW</h1>
+    <p class="tag">The Order took the city. Curfew began at dusk.<br />You were still outside.</p>
+    <p class="goal">Find <b>3 radio parts</b> in the abandoned block, then reach the <b>sewer hatch</b>.<br />Don't let the patrols see you.</p>
+    <button id="play">Play</button>
+    <div class="controls">
+      <div><kbd>WASD</kbd> move</div>
+      <div><kbd>Mouse</kbd> look</div>
+      <div><kbd>Shift</kbd> sprint (loud)</div>
+      <div><kbd>C</kbd> crouch (quiet, hide behind crates)</div>
+      <div><kbd>E</kbd> hide in locker / pick up</div>
+      <div><kbd>F</kbd> flashlight (they'll see it)</div>
+      <div><kbd>M</kbd> mute &nbsp; <kbd>Esc</kbd> pause</div>
+    </div>
+    <div id="best"></div>
+  </div>
+
+  <div id="pause" class="screen hidden">
+    <h2>Paused</h2>
+    <button id="resume">Resume</button>
+    <button id="restart-p" class="secondary">Restart</button>
+  </div>
+
+  <div id="end" class="screen hidden">
+    <h2 id="end-title"></h2>
+    <p id="end-text"></p>
+    <button id="again">Try again</button>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

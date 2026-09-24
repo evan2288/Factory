@@ -1,0 +1,8 @@
+imageio-ffmpeg
+opencv-python-headless
+mediapipe
+pillow
+numpy
+fonttools
+brotli
+openpyxl

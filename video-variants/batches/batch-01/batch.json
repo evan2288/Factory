@@ -1,0 +1,22 @@
+{
+  "batch": "batch-01",
+  "note": "One batch, two source groups kept separate. Every source clip in both groups gets the same number of variants (count not decided yet). No variants made yet.",
+  "groups": {
+    "seedance-2.5": {
+      "model": "Seedance 2.5",
+      "made_with": "Higgsfield",
+      "folder": "seedance-2.5/",
+      "clips": [
+        { "file": "seedance-2.5_01.mp4", "original": "hf_20260924_055522_f01c7027-28d0-47be-b1fb-453af257b682.mp4", "resolution": "1080x1920", "seconds": 6.04 },
+        { "file": "seedance-2.5_02.mp4", "original": "hf_20260924_055638_b5072380-8d63-43bd-b744-2b6b318078e8.mp4", "resolution": "1080x1920", "seconds": 9.04 },
+        { "file": "seedance-2.5_03.mp4", "original": "hf_20260924_062438_a3304a6c-6594-453b-abb0-94fe6f6436cf.mp4", "resolution": "1080x1920", "seconds": 7.04 }
+      ]
+    },
+    "veo": {
+      "model": "Google Veo (larger set, coming next)",
+      "folder": "veo/",
+      "clips": []
+    }
+  },
+  "variants_per_clip": null
+}

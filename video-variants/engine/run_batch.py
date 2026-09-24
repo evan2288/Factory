@@ -160,6 +160,20 @@ def load_catalog(sources: list[dict]) -> list[dict]:
     return sources
 
 
+_bank_files: set[str] | None = None
+
+
+def bank_has_clip(s: dict) -> bool:
+    """True when BANK already holds this clip's 10 videos and its _data file."""
+    global _bank_files
+    if _bank_files is None:
+        listed = json.loads(rc("lsjson", "-R", "--files-only", "--include", "*.{mp4,json}", remote(BANK_FOLDER_ID)))
+        _bank_files = {f["Path"] for f in listed}
+    folder = f"{s['source_id']}_{s['slug']}"
+    videos = [f"{s['bank_folder']}/{folder}/{folder}_v{i:02d}.mp4" for i in range(1, 11)]
+    return f"_data/{folder}.json" in _bank_files and all(v in _bank_files for v in videos)
+
+
 # ------------------------------------------------------------------ worker
 
 def process_source(s: dict, upload: bool, keep_local: bool) -> dict:
@@ -244,6 +258,11 @@ def main():
 
     state_path = os.path.join(WORK, "state.json")
     state = json.load(open(state_path)) if os.path.exists(state_path) else {}
+    if not a.no_upload:
+        # a fresh machine has no state.json: count clips already complete in BANK
+        for s in sources:
+            if not state.get(s["source_id"], {}).get("done") and bank_has_clip(s):
+                state[s["source_id"]] = {"done": True, "problems": [], "variants": 10, "found_in_bank": True}
     already = sum(1 for s in sources if state.get(s["source_id"], {}).get("done"))
     todo = [s for s in sources if (not a.only or s["source_id"] in a.only)
             and not state.get(s["source_id"], {}).get("done")]

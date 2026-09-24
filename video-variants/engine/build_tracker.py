@@ -144,10 +144,10 @@ def readme(rows, tracker_id, bank_id, generated):
         by.setdefault(e["group_label"], [0, 0])
         by[e["group_label"]][0] += 1
         by[e["group_label"]][1] += len(e["variants"])
-    groups = "\n".join(f"- {g}: {c} clips -> {v} videos" for g, (c, v) in by.items())
+    groups = "\n".join(f"- {g}: {c} clip{'s' * (c != 1)} -> {v} videos" for g, (c, v) in by.items())
     return f"""# Katie Video Bank - README for AI tools
 
-Generated {generated}. {total} videos from {len(rows)} source clips.
+Generated {generated}. {total} videos from {len(rows)} source clip{'s' * (len(rows) != 1)}.
 {groups}
 
 ## Where things are

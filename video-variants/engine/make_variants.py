@@ -11,17 +11,17 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import tempfile
 import time
 
 import cv2
-import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 from hooks import HOOKS
-from vv_detect import H, W, HeadDetector, analyze, normalize_frame
+from vv_detect import H, HeadDetector, analyze
 from vv_render import encode, frame_at, full_frame_png, micro_grade, place_block, probe, psnr_outside_text, verify
-from vv_text import FAMILIES, Hook, TextStyle, font, matched_colors, render_block, scene_colors
+from vv_text import Hook, TextStyle, font, matched_colors, render_block, scene_colors
 
 # 10 looks per clip: different font family, size and/or colour each time.
 # "M1"/"M2" = pastel picked to suit this clip's colours.
@@ -88,7 +88,10 @@ def make_variants(src: str, out_dir: str, source_id: str, slug: str, hook: Hook,
     a = analyze(src, detector)
     scene = scene_colors(a["frames"], rect=(108, 0.35 * H, 972, 0.72 * H))
     m = [c for c in matched_colors(scene) if c not in ("white", "cream")]
-    pick = {"M1": m[0], "M2": m[1] if len(m) > 1 else m[0]}
+    # Two of the four best-matching pastels, chosen per clip so the bank isn't all one colour.
+    top = m[:4]
+    m1, m2 = random.Random(source_id).sample(top, 2) if len(top) >= 2 else (m[0], m[0])
+    pick = {"M1": m1, "M2": m2}
     log(f"  analysed {a['frames_sampled']} frames, {len(a['boxes'])} face boxes, "
         f"{a['frames_with_faces']}/{a['frames_sampled']} frames with faces, colours {pick} ({time.time() - t0:.0f}s)")
 

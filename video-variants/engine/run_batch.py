@@ -120,7 +120,8 @@ def list_sources() -> list[dict]:
         for f in files:
             if group == "SEED":
                 slug, theme = SEED_META.get(f["Name"], (None, None))
-                code = f"{int(re.search(r'(\d+)', f['Name']).group(1)):02d}"
+                num = int(re.findall(r"\d+", os.path.splitext(f["Name"])[0])[-1])  # "seedance-2.5_03" -> 3
+                code = f"{num:02d}"
                 slug = slug or slug_of(f["Name"])[1]
                 theme = theme or theme_for(f["Name"])
             else:
@@ -220,14 +221,20 @@ def main():
     ap.add_argument("--keep-local", action="store_true")
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--skip-tracker", action="store_true")
+    ap.add_argument("--offline", action="store_true", help="local Seedance clips only, no Drive (for testing)")
     a = ap.parse_args()
 
     os.makedirs(WORK, exist_ok=True)
-    RCLONE = rclone_bin()
-    write_rclone_conf()
-    about = json.loads(rc("about", "gd:", "--json"))
-    free_gb = (about.get("free") or 0) / 1e9
-    log(f"Drive connected. Free space: {free_gb:.1f} GB")
+    free_gb = 0.0
+    if a.offline:
+        a.no_upload = True
+        SOURCES[:] = [x for x in SOURCES if os.path.isdir(x[1])]
+    else:
+        RCLONE = rclone_bin()
+        write_rclone_conf()
+        about = json.loads(rc("about", "gd:", "--json"))
+        free_gb = (about.get("free") or 0) / 1e9
+        log(f"Drive connected. Free space: {free_gb:.1f} GB")
 
     sources = load_catalog(list_sources())
     counts = {g: sum(1 for s in sources if s["group"] == g) for g, *_ in SOURCES}
@@ -237,11 +244,12 @@ def main():
 
     state_path = os.path.join(WORK, "state.json")
     state = json.load(open(state_path)) if os.path.exists(state_path) else {}
+    already = sum(1 for s in sources if state.get(s["source_id"], {}).get("done"))
     todo = [s for s in sources if (not a.only or s["source_id"] in a.only)
             and not state.get(s["source_id"], {}).get("done")]
     if a.limit:
         todo = todo[:a.limit]
-    log(f"{len(todo)} clips to process ({len(sources) - len(todo)} already done)")
+    log(f"{len(todo)} clips to process now ({already} already in BANK)")
 
     failures = []
     with cf.ProcessPoolExecutor(max_workers=a.workers) as ex:

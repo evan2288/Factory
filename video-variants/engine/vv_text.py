@@ -157,7 +157,7 @@ def render_block(hook: Hook, style: TextStyle) -> Block:
         if fam["upper"]:
             text = text.upper()
         size = max(10, round(base * s))
-        limit = max_w * (1.10 if kind == "head" else 1.0)
+        limit = min(max_w * 1.10, W * 0.82) if kind == "head" else max_w  # keep clear of the screen edges
         while True:
             f = font(name, size)
             fb = font(FALLBACK_FONT, round(size * (0.82 if style.family == "condensed" else 0.95)))

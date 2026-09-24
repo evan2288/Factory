@@ -1,0 +1,251 @@
+[
+  {
+    "file": "chic_house_1.m4a",
+    "style": "chic_house",
+    "bpm": 120,
+    "key": "C",
+    "duration_s": 54.0,
+    "stems": {
+      "chords": -30.6,
+      "pad": -32.4,
+      "bass": -28.2,
+      "drums": -26.1
+    },
+    "lufs": -16.0
+  },
+  {
+    "file": "chic_house_2.m4a",
+    "style": "chic_house",
+    "bpm": 122,
+    "key": "Eb",
+    "duration_s": 53.1,
+    "stems": {
+      "chords": -30.8,
+      "pad": -32.1,
+      "bass": -27.9,
+      "drums": -26.7
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "chic_house_3.m4a",
+    "style": "chic_house",
+    "bpm": 118,
+    "key": "A",
+    "duration_s": 52.9,
+    "stems": {
+      "chords": -31.0,
+      "pad": -32.8,
+      "bass": -27.9,
+      "drums": -26.7
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "elegant_piano_1.m4a",
+    "style": "elegant_piano",
+    "bpm": 88,
+    "key": "C",
+    "duration_s": 54.5,
+    "stems": {
+      "chords": -31.3,
+      "pad": -31.9,
+      "perc_light": -39.5
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "elegant_piano_2.m4a",
+    "style": "elegant_piano",
+    "bpm": 84,
+    "key": "D",
+    "duration_s": 54.3,
+    "stems": {
+      "chords": -30.9,
+      "pad": -32.4,
+      "perc_light": -39.7
+    },
+    "lufs": -16.0
+  },
+  {
+    "file": "elegant_piano_3.m4a",
+    "style": "elegant_piano",
+    "bpm": 92,
+    "key": "E",
+    "duration_s": 52.2,
+    "stems": {
+      "chords": -30.9,
+      "pad": -32.2,
+      "perc_light": -39.3
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "groove_pop_1.m4a",
+    "style": "groove_pop",
+    "bpm": 100,
+    "key": "D",
+    "duration_s": 52.8,
+    "stems": {
+      "chords": -34.4,
+      "pad": -33.0,
+      "bass": -28.9,
+      "drums": -30.5
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "groove_pop_2.m4a",
+    "style": "groove_pop",
+    "bpm": 104,
+    "key": "A",
+    "duration_s": 53.1,
+    "stems": {
+      "chords": -33.7,
+      "pad": -32.7,
+      "bass": -29.1,
+      "drums": -30.6
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "groove_pop_3.m4a",
+    "style": "groove_pop",
+    "bpm": 98,
+    "key": "E",
+    "duration_s": 53.9,
+    "stems": {
+      "chords": -33.9,
+      "pad": -33.0,
+      "bass": -29.1,
+      "drums": -30.7
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "gym_energy_1.m4a",
+    "style": "gym_energy",
+    "bpm": 126,
+    "key": "E",
+    "duration_s": 53.3,
+    "stems": {
+      "chords": -30.7,
+      "pad": -32.6,
+      "bass": -25.7,
+      "drums": -24.6
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "gym_energy_2.m4a",
+    "style": "gym_energy",
+    "bpm": 128,
+    "key": "D",
+    "duration_s": 52.5,
+    "stems": {
+      "chords": -30.3,
+      "pad": -32.6,
+      "bass": -25.2,
+      "drums": -24.6
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "gym_energy_3.m4a",
+    "style": "gym_energy",
+    "bpm": 124,
+    "key": "F",
+    "duration_s": 52.3,
+    "stems": {
+      "chords": -30.3,
+      "pad": -32.2,
+      "bass": -25.3,
+      "drums": -24.6
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "lofi_chill_1.m4a",
+    "style": "lofi_chill",
+    "bpm": 82,
+    "key": "F",
+    "duration_s": 52.7,
+    "stems": {
+      "chords": -30.9,
+      "bass": -30.4,
+      "melody": -36.0,
+      "drums": -31.6
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "lofi_chill_2.m4a",
+    "style": "lofi_chill",
+    "bpm": 78,
+    "key": "Eb",
+    "duration_s": 52.3,
+    "stems": {
+      "chords": -31.6,
+      "bass": -30.5,
+      "melody": -35.5,
+      "drums": -31.5
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "lofi_chill_3.m4a",
+    "style": "lofi_chill",
+    "bpm": 86,
+    "key": "D",
+    "duration_s": 53.0,
+    "stems": {
+      "chords": -30.5,
+      "bass": -30.3,
+      "melody": -35.6,
+      "drums": -31.4
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "soft_acoustic_1.m4a",
+    "style": "soft_acoustic",
+    "bpm": 98,
+    "key": "G",
+    "duration_s": 53.9,
+    "stems": {
+      "chords": -27.5,
+      "bass": -30.3,
+      "melody": -42.6,
+      "drums": -33.2
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "soft_acoustic_2.m4a",
+    "style": "soft_acoustic",
+    "bpm": 94,
+    "key": "D",
+    "duration_s": 53.6,
+    "stems": {
+      "chords": -27.5,
+      "bass": -30.6,
+      "melody": -43.8,
+      "drums": -33.2
+    },
+    "lufs": -16.1
+  },
+  {
+    "file": "soft_acoustic_3.m4a",
+    "style": "soft_acoustic",
+    "bpm": 102,
+    "key": "C",
+    "duration_s": 54.1,
+    "stems": {
+      "chords": -27.4,
+      "bass": -30.7,
+      "melody": -43.3,
+      "drums": -33.0
+    },
+    "lufs": -16.1
+  }
+]

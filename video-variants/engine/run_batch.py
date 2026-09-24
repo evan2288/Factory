@@ -24,13 +24,13 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from hooks import HOOKS, theme_for  # noqa: E402
+from hooks import theme_for  # noqa: E402
 
 BANK_FOLDER_ID = "1K2HSgUVV4k6Na-7X1i008AIlmV7QF0QJ"  # AI Influencers/katie/BANK
 SOURCES = [
     # group, Drive folder id (or local dir), BANK sub-folder, note for the tracker
-    ("FRESH", "15OwffDOBfUBH8nZ2ziWiK8ytU0uEIoFw", "1_FRESH_veo3", "Veo 3, never posted"),
-    ("REUSED", "1XV5WfJepS-HvrUXc1E2GC76ejcyB1ZNm", "2_REUSED_veo3", "Veo 3 - this clip was posted before"),
+    ("NEW", "15OwffDOBfUBH8nZ2ziWiK8ytU0uEIoFw", "1_NEW_veo3", "New Veo3 clip (never posted)"),
+    ("OLD", "1XV5WfJepS-HvrUXc1E2GC76ejcyB1ZNm", "2_OLD_reused_veo3", "Old reused Veo3 clip (posted before)"),
     ("SEED", os.path.join(HERE, "..", "batches", "batch-01", "seedance-2.5"), "3_SEEDANCE_2.5", "Seedance 2.5 (Higgsfield)"),
 ]
 # The Seedance files have no descriptive names, so their themes are set by hand.
@@ -136,24 +136,25 @@ def list_sources() -> list[dict]:
 
 
 def load_catalog(sources: list[dict]) -> list[dict]:
-    """Keep earlier hook choices stable; give new clips the next hook in their theme."""
+    """Number each clip within its theme (drives which text and music it gets).
+
+    Numbers are saved, so rerunning after new clips arrive never changes the
+    text or music of clips that are already in BANK.
+    """
     path = os.path.join(WORK, "catalog.json")
     old = {}
     if os.path.exists(path):
         old = {s["source_id"]: s for s in json.load(open(path))}
     counters: dict[str, int] = {}
     for s in old.values():
-        counters[s["theme"]] = max(counters.get(s["theme"], 0), s["hook_index"] + 1)
+        counters[s["theme"]] = max(counters.get(s["theme"], 0), s["clip_index"] + 1)
     for s in sources:
         prev = old.get(s["source_id"])
         if prev and prev["theme"] == s["theme"]:
-            s["hook_index"] = prev["hook_index"]
+            s["clip_index"] = prev["clip_index"]
         else:
-            k = counters.get(s["theme"], 0)
-            s["hook_index"] = k % len(HOOKS[s["theme"]])
-            counters[s["theme"]] = k + 1
-        h = HOOKS[s["theme"]][s["hook_index"]]
-        s["hook"] = {"headline": h.headline, "body": h.body, "cta": h.cta}
+            s["clip_index"] = counters.get(s["theme"], 0)
+            counters[s["theme"]] = s["clip_index"] + 1
     with open(path, "w") as f:
         json.dump(sources, f, indent=2)
     return sources
@@ -165,7 +166,6 @@ def process_source(s: dict, upload: bool, keep_local: bool) -> dict:
     """Download, render 10 variants, verify, upload. Runs in a worker process."""
     from make_variants import make_variants
     from vv_detect import HeadDetector
-    from vv_text import Hook
 
     t0 = time.time()
     src_dir = os.path.join(WORK, "src", s["group"])
@@ -181,7 +181,7 @@ def process_source(s: dict, upload: bool, keep_local: bool) -> dict:
     det = HeadDetector()
     lines = []
     try:
-        res = make_variants(src, out_dir, s["source_id"], s["slug"], Hook(**s["hook"]), n=10,
+        res = make_variants(src, out_dir, s["source_id"], s["slug"], s["theme"], s["clip_index"], n=10,
                             detector=det, log=lines.append)
     finally:
         det.close()

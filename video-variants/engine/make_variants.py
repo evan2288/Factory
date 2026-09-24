@@ -1,7 +1,7 @@
-"""Make N text variants of one clip.
+"""Make N variants of one clip: different text, look and music in each.
 
     python make_variants.py SRC.mp4 OUT_DIR --id SEED-02 --slug wallsit-living-room \
-        --theme wallsit [--hook-index 0] [--n 10]
+        --theme wallsit [--clip-index 0] [--n 10]
 
 Writes OUT_DIR/<id>_<slug>_vNN.mp4, OUT_DIR/<id>_<slug>_preview.jpg and
 OUT_DIR/<id>_<slug>.json (everything about each variant).
@@ -18,7 +18,8 @@ import time
 import cv2
 from PIL import Image, ImageDraw
 
-from hooks import HOOKS
+from hooks import HOOKS, hooks_for
+from vv_audio import MUSIC_DIR, audio_plan, classify, pick_tracks
 from vv_detect import H, HeadDetector, analyze
 from vv_render import encode, frame_at, full_frame_png, micro_grade, place_block, probe, psnr_outside_text, verify
 from vv_text import Hook, TextStyle, font, matched_colors, render_block, scene_colors
@@ -79,26 +80,36 @@ def contact_sheet(paths: list[str], labels: list[str], out: str, title: str) -> 
     sheet.save(out, quality=86)
 
 
-def make_variants(src: str, out_dir: str, source_id: str, slug: str, hook: Hook, n: int = 10,
-                  crf: int = 16, preset: str = "slow", detector: HeadDetector | None = None,
+def make_variants(src: str, out_dir: str, source_id: str, slug: str, theme: str, clip_index: int = 0,
+                  n: int = 10, crf: int = 16, preset: str = "slow", detector: HeadDetector | None = None,
                   log=print) -> dict:
     os.makedirs(out_dir, exist_ok=True)
     t0 = time.time()
     info = probe(src)
+    hooks = hooks_for(theme, clip_index, n)
+
+    # Faces + colours.
     a = analyze(src, detector)
     scene = scene_colors(a["frames"], rect=(108, 0.35 * H, 972, 0.72 * H))
     m = [c for c in matched_colors(scene) if c not in ("white", "cream")]
-    # Two of the four best-matching pastels, chosen per clip so the bank isn't all one colour.
-    top = m[:4]
+    top = m[:4]  # two of the four best-matching pastels, chosen per clip for variety
     m1, m2 = random.Random(source_id).sample(top, 2) if len(top) >= 2 else (m[0], m[0])
     pick = {"M1": m1, "M2": m2}
+
+    # Sound: keep existing music, otherwise add one of our tracks.
+    sound = classify(src, seconds=30) if info["audio_codec"] else {"has_audio": False, "music": 0.0,
+                                                                     "speech": 0.0, "top": [], "lufs": None}
+    plan = audio_plan(info, sound)
+    tracks = pick_tracks(theme, clip_index, n, info["duration"] or 10, seed=source_id)
     log(f"  analysed {a['frames_sampled']} frames, {len(a['boxes'])} face boxes, "
-        f"{a['frames_with_faces']}/{a['frames_sampled']} frames with faces, colours {pick} ({time.time() - t0:.0f}s)")
+        f"{a['frames_with_faces']}/{a['frames_sampled']} frames with faces, colours {pick}; "
+        f"sound: {plan['reason']} ({time.time() - t0:.0f}s)")
 
     base = f"{source_id}_{slug}"
     records, outs, labels = [], [], []
     with tempfile.TemporaryDirectory() as tmp:
         for i in range(1, n + 1):
+            hook = hooks[i - 1]
             fam, scale, hc, bc, label = PLAN[(i - 1) % len(PLAN)]
             st = TextStyle(fam, scale, pick.get(hc, hc), pick.get(bc, bc), label)
             pl, block, st_used = fit_and_place(hook, st, a["boxes"], a["minor_boxes"], JITTER[(i - 1) % len(JITTER)])
@@ -106,16 +117,21 @@ def make_variants(src: str, out_dir: str, source_id: str, slug: str, hook: Hook,
             png = os.path.join(tmp, f"{vid}.png")
             full_frame_png(block.img, pl["x"], pl["y"], png)
             grade = micro_grade(vid)
+            tr = tracks[i - 1]
+            music = None
+            if plan["mode"] != "keep":
+                music = {"path": os.path.join(MUSIC_DIR, tr["file"]), "start": tr["start"], "plan": plan,
+                         "src_lufs": sound.get("lufs"), "duration": info["duration"]}
             out = os.path.join(out_dir, f"{base}_v{i:02d}.mp4")
             t1 = time.time()
-            encode(src, png, out, grade, info["audio_codec"], crf=crf, preset=preset)
-            v = verify(out, info["duration"], bool(info["audio_codec"]))
-            # How different is the picture outside the text? (>= 38 dB looks identical)
+            encode(src, png, out, grade, info["audio_codec"], crf=crf, preset=preset, music=music)
+            v = verify(out, info["duration"], expect_audio=True)
             diff_db = psnr_outside_text(out, src, pl["y"], pl["y"] + block.h)
             rec = {
                 "video_id": vid,
                 "file": os.path.basename(out),
                 "variant": i,
+                "text": {"headline": hook.headline, "body": hook.body, "cta": hook.cta},
                 "style": style_label(st_used),
                 "family": st_used.family,
                 "size_pct": round(st_used.scale * 100),
@@ -125,6 +141,8 @@ def make_variants(src: str, out_dir: str, source_id: str, slug: str, hook: Hook,
                 "text_box": [pl["x"], pl["y"], block.w, block.h],
                 "text_clear_of_faces": pl["ok"],
                 "face_overlap_px": pl["face_overlap"],
+                "music": ({"mode": "original audio (already has music)"} if music is None else
+                          {"mode": plan["mode"], "track": tr["file"], "style": tr["style"], "start_s": tr["start"]}),
                 "grade": grade,
                 "picture_diff_db": diff_db,
                 "duration_s": v["info"]["duration"],
@@ -136,17 +154,20 @@ def make_variants(src: str, out_dir: str, source_id: str, slug: str, hook: Hook,
             records.append(rec)
             outs.append(out)
             labels.append(f"v{i:02d} {st_used.family} {rec['size_pct']}% {st_used.head_color}")
-            log(f"  {rec['file']}: {rec['style']} | y={pl['y']} clear={pl['ok']} | "
-                f"{rec['bytes'] / 1e6:.1f} MB | diff {diff_db} dB | {rec['encode_s']}s | {'OK' if v['ok'] else v['problems']}")
+            music_note = "orig" if music is None else tr["style"]
+            log(f"  {rec['file']}: \"{hook.headline}\" | {rec['style']} | music {music_note} | y={pl['y']} "
+                f"clear={pl['ok']} | {rec['bytes'] / 1e6:.1f} MB | diff {diff_db} dB | {rec['encode_s']}s | "
+                f"{'OK' if v['ok'] else v['problems']}")
 
     preview = os.path.join(out_dir, f"{base}_preview.jpg")
-    contact_sheet(outs, labels, preview, f"{source_id}  {slug}  —  {hook.headline}")
+    contact_sheet(outs, labels, preview, f"{source_id}  {slug}  ({theme})")
     result = {
         "source_id": source_id,
         "slug": slug,
+        "theme": theme,
         "source_file": os.path.basename(src),
         "source_info": info,
-        "hook": {"headline": hook.headline, "body": hook.body, "cta": hook.cta},
+        "sound": {**sound, "plan": plan},
         "colours": pick,
         "faces": {"boxes": len(a["boxes"]), "frames_with_faces": a["frames_with_faces"],
                   "frames_sampled": a["frames_sampled"]},
@@ -166,15 +187,14 @@ def main():
     ap.add_argument("--id", required=True)
     ap.add_argument("--slug", required=True)
     ap.add_argument("--theme", required=True, choices=sorted(HOOKS))
-    ap.add_argument("--hook-index", type=int, default=0)
+    ap.add_argument("--clip-index", type=int, default=0, help="position among clips of the same theme")
     ap.add_argument("--n", type=int, default=10)
     ap.add_argument("--crf", type=int, default=16)
     ap.add_argument("--preset", default="slow")
     a = ap.parse_args()
-    hooks = HOOKS[a.theme]
     det = HeadDetector()
     try:
-        r = make_variants(a.src, a.out_dir, a.id, a.slug, hooks[a.hook_index % len(hooks)], a.n, a.crf, a.preset, det)
+        r = make_variants(a.src, a.out_dir, a.id, a.slug, a.theme, a.clip_index, a.n, a.crf, a.preset, det)
     finally:
         det.close()
     bad = [v["file"] for v in r["variants"] if not v["verified"] or not v["text_clear_of_faces"]]

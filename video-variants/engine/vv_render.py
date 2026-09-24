@@ -134,13 +134,31 @@ def filter_graph(g: dict) -> str:
 
 
 def encode(src: str, overlay_png: str, out: str, grade: dict, audio_codec: str | None,
-           crf: int = 16, preset: str = "slow") -> None:
-    cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", src, "-i", overlay_png,
-           "-filter_complex", filter_graph(grade), "-map", "[out]", "-map", "0:a?",
-           "-c:v", "libx264", "-preset", preset, "-crf", str(crf), "-profile:v", "high", "-level:v", "4.2",
-           "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
-           "-color_range", "tv", "-movflags", "+faststart"]
-    cmd += ["-c:a", "copy"] if audio_codec == "aac" else ["-c:a", "aac", "-b:a", "192k"]
+           crf: int = 16, preset: str = "slow", music: dict | None = None) -> None:
+    """Encode one variant. `music` = {"path", "start", "plan", "src_lufs", "duration"} or None.
+
+    plan["mode"]: keep = original audio as is; mix = original + music under it;
+    music_only = music replaces a silent/missing track.
+    """
+    graph = filter_graph(grade)
+    cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", src, "-i", overlay_png]
+    maps = ["-map", "[out]"]
+    if music and music["plan"]["mode"] in ("mix", "music_only"):
+        from vv_audio import audio_filter
+        pre, agraph = audio_filter(music["plan"], music["duration"], music.get("src_lufs"), music["start"])
+        cmd += pre + [music["path"]]
+        graph += ";" + agraph
+        maps += ["-map", "[aout]"]
+        acodec = ["-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2"]
+    else:
+        maps += ["-map", "0:a?"]
+        acodec = ["-c:a", "copy"] if audio_codec == "aac" else ["-c:a", "aac", "-b:a", "192k"]
+    cmd += ["-filter_complex", graph, *maps,
+            "-c:v", "libx264", "-preset", preset, "-crf", str(crf), "-profile:v", "high", "-level:v", "4.2",
+            "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+            "-color_range", "tv", "-movflags", "+faststart", *acodec]
+    if music:  # never let the music make the file longer than the clip
+        cmd += ["-t", f"{music['duration']:.3f}"]
     cmd.append(out)
     subprocess.run(cmd, check=True)
 

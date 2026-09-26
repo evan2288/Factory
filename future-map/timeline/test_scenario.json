@@ -1,0 +1,87 @@
+{
+  "title": "THE WORLD, 2025",
+  "subtitle": "A speculative history of the next thousand years",
+  "start_year": 2025,
+  "intro_seconds": 4.0,
+  "hold_seconds": 4.0,
+  "transition_seconds": 1.2,
+  "settle_seconds": 1.5,
+  "events": [
+    {
+      "year": 2031,
+      "title": "Kurdistan declares independence",
+      "subtitle": "Iraqi Kurdistan, Kirkuk, Rojava and south-eastern Turkey unite",
+      "changes": [
+        {"to": "KRD", "name": "Kurdistan", "color": "#c9736a", "take": [
+          {"from": "Iraq", "regions": ["Kurdistan"], "provinces": ["Kirkuk"]},
+          {"from": "Syria", "provinces": ["Al-Hasakah"]},
+          {"from": "Turkey", "provinces": ["Diyarbakır", "Hakkâri", "Batman", "Bitlis", "Bingöl", "Ağrı", "Şırnak", "Mardin", "Van", "Siirt", "Muş"]}
+        ]}
+      ]
+    },
+    {
+      "year": 2036,
+      "title": "Scotland leaves the United Kingdom",
+      "subtitle": "Second referendum passes; Edinburgh rejoins the EU",
+      "changes": [
+        {"to": "SCT", "name": "Scotland", "color": "#7f9fcf", "take": [
+          {"from": "United Kingdom", "regions": ["Eastern", "Highlands and Islands", "North Eastern", "South Western"]}
+        ]}
+      ]
+    },
+    {
+      "year": 2041,
+      "title": "Frozen front in Ukraine",
+      "subtitle": "Armistice line becomes the de facto border",
+      "changes": [
+        {"to": "RUS", "take": [
+          {"from": "Ukraine", "provinces": ["Donetsk", "Luhansk", "Zaporizhzhia", "Kherson"]}
+        ]}
+      ]
+    },
+    {
+      "year": 2048,
+      "title": "The European Federation",
+      "subtitle": "The eurozone core becomes a single federal state",
+      "changes": [
+        {"to": "EUF", "name": "European Federation", "color": "#6f8fd0", "take": [
+          {"from": "France"}, {"from": "Germany"}, {"from": "Italy"}, {"from": "Spain"}, {"from": "Portugal"},
+          {"from": "Belgium"}, {"from": "Netherlands"}, {"from": "Luxembourg"}, {"from": "Austria"},
+          {"from": "Slovenia"}, {"from": "Croatia"}, {"from": "Slovakia"}, {"from": "Czech Republic"},
+          {"from": "Ireland"}, {"from": "Greece"}, {"from": "Finland"}, {"from": "Estonia"},
+          {"from": "Latvia"}, {"from": "Lithuania"}
+        ]}
+      ]
+    },
+    {
+      "year": 2075,
+      "title": "Quebec becomes a republic",
+      "subtitle": "Canada's confederation loosens",
+      "changes": [
+        {"to": "QUE", "name": "Quebec", "color": "#d9c55f", "take": [
+          {"from": "Canada", "provinces": ["Quebec"]}
+        ]}
+      ]
+    },
+    {
+      "year": 2140,
+      "title": "West African Union",
+      "subtitle": "ECOWAS completes political union",
+      "changes": [
+        {"to": "WAU", "name": "West African Union", "color": "#7fb27a", "take": [
+          {"from": "Nigeria"}, {"from": "Ghana"}, {"from": "Benin"}, {"from": "Togo"}, {"from": "Ivory Coast"},
+          {"from": "Burkina Faso"}, {"from": "Mali"}, {"from": "Niger"}, {"from": "Senegal"}, {"from": "Guinea"},
+          {"from": "Sierra Leone"}, {"from": "Liberia"}, {"from": "Guinea Bissau"}, {"from": "Gambia"}
+        ]}
+      ]
+    },
+    {
+      "year": 2300,
+      "title": "Korea reunified",
+      "subtitle": "The peninsula is one state again",
+      "changes": [
+        {"to": "KOR", "name": "Korea", "take": [{"from": "North Korea"}]}
+      ]
+    }
+  ]
+}

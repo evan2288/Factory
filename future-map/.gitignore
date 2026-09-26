@@ -1,0 +1,4 @@
+data/*.geojson
+cache/
+out/
+__pycache__/

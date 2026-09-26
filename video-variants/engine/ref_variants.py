@@ -95,7 +95,7 @@ def looks_for(sid: str, m1: str, m2: str) -> list[Look]:
              Part("BebasNeue-Regular.ttf", 196, "butter", stroke=0.035),
              Part("TikTokSans-SemiBold.ttf", 52, "white", case="upper", tracking=0.02, stroke=0.06),
              Part("TikTokSans-SemiBold.ttf", 46, m1, case="upper", tracking=0.02, stroke=0.06),
-             timing="stagger", anim="rise", gap=0.12),
+             timing="stagger", anim="fade", gap=0.12),
         Look("Typewriter",
              Part("ArchivoBlack-Regular.ttf", 112, "white"),
              Part("CourierPrime-Bold.ttf", 54, "white", effect="box", box="black", box_alpha=170),
@@ -120,7 +120,7 @@ def looks_for(sid: str, m1: str, m2: str) -> list[Look]:
              Part("Montserrat-ExtraBold.ttf", 96, m2, case="upper"),
              Part("Montserrat-SemiBoldItalic.ttf", 56, "white", stroke=0.06),
              Part("Montserrat-Bold.ttf", 44, "white", case="upper", stroke=0.06),
-             timing="lines", anim="rise"),
+             timing="lines", anim="fade"),
         Look("Condensed",
              Part("Anton-Regular.ttf", 150, "white", stroke=0.05),
              Part("LeagueGothic-Regular.ttf", 86, "butter", stroke=0.05),
@@ -137,7 +137,7 @@ def looks_for(sid: str, m1: str, m2: str) -> list[Look]:
              Part("Poppins-BlackItalic.ttf", 124, "peach"),
              Part("Lora-BoldItalic.ttf", 62, "white", effect="shadow"),
              Part("Lora-BoldItalic.ttf", 54, "peach", effect="shadow"),
-             timing="stagger", anim="rise"),
+             timing="stagger", anim="fade"),
     ]
 
 

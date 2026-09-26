@@ -59,3 +59,25 @@ BANK/
 One clip at a time: `python3 make_variants.py SRC.mp4 OUT_DIR --id SEED-02 --slug wallsit --theme wallsit`.
 Regenerate the music library: `python3 music_gen.py` (needs `fluidsynth`; downloads the GeneralUser GS
 soundfont, which is free for commercial music).
+
+## Reference-matched variants (15 per clip)
+
+`engine/ref_variants.py` makes 15 variants of a clip that was generated from a reference video
+(someone else's post with on-screen text). Clips, references and the reference wording are listed in
+`engine/ref_specs.py`. The wording is copied verbatim into every variant.
+
+- **v01 `_EXACT-COPY`**: the reference's own text layer, lifted pixel for pixel from the reference video
+  (`engine/ref_extract.py`), so font, size, colour, outline, line breaks and timing are identical. It is
+  only moved up or down if, at the reference's position, it would cover the face.
+- **v02**: the reference's fonts (closest open fonts) in new colours.
+- **v03-v15**: 13 more looks with different fonts, separate title/body colours, bold titles with italic
+  bodies, sizes, effects (outline, shadow, neon glow, label boxes, highlighted title) and reveal timings
+  (all at once, headline then body, line by line, late CTA; pop, fade or rise). Looks: `engine/ref_variants.py`,
+  rendering: `engine/vv_style.py`.
+- Text never covers a face at any point in the clip and stays between 20% and 82% of the screen height
+  (the exact copy may go down to 87% when it has to move). Music, invisible grade and checks as above.
+
+```bash
+python3 ref_variants.py --only SEED-07 --no-upload   # one clip, local only
+python3 ref_variants.py                              # all clips -> BANK/3_SEEDANCE_2.5/four videos September 25th
+```

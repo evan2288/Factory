@@ -12,6 +12,8 @@ Scenario JSON shape:
         "take": [{"from": "Iraq", "provinces": ["Erbil", "Dahuk"]},
                  {"from": "Turkey", "regions": ["Southeast Anatolia"]},
                  {"country": "SOMEID"}]},            # every tile a live country holds now
+       {"to": "SDN_RSF", "name": "RSF", "rebel": true,       # civil-war faction: hatched fill
+        "take": [{"from": "Sudan", "regions": ["Darfur"]}]},
        {"rename": "RUS", "name": "Russian Federation"},
        {"recolor": "CHN", "color": "#..."}
      ]}
@@ -72,7 +74,8 @@ def build(scenario_path, atlas: Atlas):
                     tiles += _resolve_take(atlas, world, item)
                 tiles = [t for t in tiles if world.owner[t] != ch["to"]]
                 moved += tiles
-                world = world.transfer(tiles, ch["to"], ch.get("name"), ch.get("color"))
+                world = world.transfer(tiles, ch["to"], ch.get("name"), ch.get("color"),
+                                       "rebel" if ch.get("rebel") else None)
         changed = unary_union([atlas.geom[t] for t in moved]) if moved else None
         frames.append(Keyframe(ev["year"], ev.get("title", ""), ev.get("subtitle", ""), world, changed,
                                ev.get("hold", hold), ev.get("transition", trans), ev.get("settle", settle),

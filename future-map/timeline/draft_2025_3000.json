@@ -1,0 +1,278 @@
+{
+  "title": "THE WORLD, 2025",
+  "subtitle": "A speculative history of the next thousand years",
+  "start_year": 2025,
+  "intro_seconds": 4.0,
+  "hold_seconds": 3.2,
+  "transition_seconds": 1.1,
+  "settle_seconds": 1.1,
+  "events": [
+    {"year": 2026, "title": "Sudan and Myanmar tear apart",
+     "subtitle": "The RSF holds Darfur and Kordofan; Myanmar's resistance takes the borderlands",
+     "changes": [
+       {"to": "SDN_RSF", "name": "RSF", "rebel": true, "take": [{"from": "Sudan", "regions": ["Darfur", "Kordofan"]}]},
+       {"to": "MMR_REB", "name": "Resistance", "rebel": true, "take": [{"from": "Myanmar", "provinces": ["Kachin State", "Kayin State", "Chin State", "Rakhine State", "Kayah State"]}]}
+     ]},
+    {"year": 2027, "title": "Frozen fronts",
+     "subtitle": "The Ukraine armistice line hardens; Abkhazia is formally absorbed; Bougainville votes to leave PNG",
+     "changes": [
+       {"to": "RUS", "take": [{"from": "Ukraine", "provinces": ["Donetsk", "Luhansk", "Zaporizhzhia", "Kherson"]}, {"from": "Georgia", "provinces": ["Abkhazia"]}]},
+       {"to": "BGV", "name": "Bougainville", "take": [{"from": "Papua New Guinea", "provinces": ["of Bougainville"]}]}
+     ]},
+    {"year": 2029, "title": "The Sahel Confederation",
+     "subtitle": "Mali, Burkina Faso and Niger merge; Morocco closes the Western Sahara file",
+     "changes": [
+       {"to": "AES", "name": "Sahel Confederation", "color": "#d6a65f", "take": [{"from": "Mali"}, {"from": "Burkina Faso"}, {"from": "Niger"}]},
+       {"to": "MAR", "take": [{"from": "Western Sahara"}]}
+     ]},
+    {"year": 2030, "title": "Sudan is partitioned",
+     "subtitle": "Darfur becomes a state; Kordofan returns to Khartoum",
+     "changes": [
+       {"to": "DAR", "name": "Darfur", "take": [{"from": "Sudan", "regions": ["Darfur"]}]},
+       {"to": "SDN", "take": [{"country": "SDN_RSF"}]}
+     ]},
+    {"year": 2031, "title": "Kurdistan declares independence",
+     "subtitle": "Iraqi Kurdistan, Kirkuk, Rojava and south-eastern Turkey unite",
+     "changes": [
+       {"to": "KRD", "name": "Kurdistan", "color": "#c9736a", "take": [
+         {"from": "Iraq", "regions": ["Kurdistan"], "provinces": ["Kirkuk"]},
+         {"from": "Syria", "provinces": ["Al-Hasakah"]},
+         {"from": "Turkey", "provinces": ["Diyarbakır", "Hakkâri", "Batman", "Bitlis", "Bingöl", "Ağrı", "Şırnak", "Mardin", "Van", "Siirt", "Muş"]}]}
+     ]},
+    {"year": 2032, "title": "Yemen and Somalia split",
+     "subtitle": "South Yemen is restored; Puntland goes its own way",
+     "changes": [
+       {"to": "SYE", "name": "South Yemen", "take": [{"from": "Yemen", "provinces": ["Adan", "Abyan", "Lahij", "Ad Dali'", "Hadhramaut", "Shabwah", "Al Mahrah"]}]},
+       {"to": "PUN", "name": "Puntland", "take": [{"from": "Somalia", "provinces": ["Bari", "Nugal", "Mudug"]}]}
+     ]},
+    {"year": 2033, "title": "Caucasus and Balkan settlements",
+     "subtitle": "Azerbaijan takes the Zangezur corridor; Republika Srpska joins Serbia",
+     "changes": [
+       {"to": "AZE", "take": [{"from": "Armenia", "provinces": ["Syunik"]}]},
+       {"to": "SRB", "take": [{"from": "Bosnia and Herzegovina", "regions": ["Repuplika Srpska"]}]}
+     ]},
+    {"year": 2034, "title": "Myanmar breaks apart",
+     "subtitle": "Arakan and Kachin become states; the Karen hills return under a federal deal",
+     "changes": [
+       {"to": "ARK", "name": "Arakan", "take": [{"from": "Myanmar", "provinces": ["Rakhine State", "Chin State"]}]},
+       {"to": "KAC", "name": "Kachin", "take": [{"from": "Myanmar", "provinces": ["Kachin State"]}]},
+       {"to": "MMR", "take": [{"country": "MMR_REB"}]}
+     ]},
+    {"year": 2036, "title": "Two Libyas, one Cyprus",
+     "subtitle": "Cyrenaica secedes; Cyprus is reunified",
+     "changes": [
+       {"to": "CYR", "name": "Cyrenaica", "take": [{"from": "Libya", "provinces": ["Benghazi", "Al Qubbah", "Butnan", "Jabal al Akhdar", "Marj", "Ajdabiya", "Kufra", "Sirte"]}]},
+       {"to": "CYP", "take": [{"from": "Northern Cyprus"}]}
+     ]},
+    {"year": 2037, "title": "Scotland and Greenland go independent",
+     "subtitle": "Two North Atlantic nations leave their unions",
+     "changes": [
+       {"to": "SCT", "name": "Scotland", "color": "#7f9fcf", "take": [{"from": "United Kingdom", "regions": ["Eastern", "Highlands and Islands", "North Eastern", "South Western"]}]},
+       {"recolor": "GRL", "color": "#8ea8b0"}
+     ]},
+    {"year": 2039, "title": "Eastern Congo and Mozambique erupt",
+     "subtitle": "M23 holds the Kivus; insurgents seize Cabo Delgado",
+     "changes": [
+       {"to": "COD_M23", "name": "M23", "rebel": true, "take": [{"from": "Democratic Republic of the Congo", "provinces": ["North Kivu", "South Kivu"]}]},
+       {"to": "MOZ_REB", "name": "Insurgency", "rebel": true, "take": [{"from": "Mozambique", "provinces": ["Cabo Delgado"]}]}
+     ]},
+    {"year": 2041, "title": "Ethiopia's federation cracks",
+     "subtitle": "Tigray leaves; Amhara militias hold the highlands",
+     "changes": [
+       {"to": "TIG", "name": "Tigray", "take": [{"from": "Ethiopia", "provinces": ["Tigray"]}]},
+       {"to": "ETH_AMH", "name": "Fano", "rebel": true, "take": [{"from": "Ethiopia", "provinces": ["Amhara"]}]}
+     ]},
+    {"year": 2043, "title": "A united Ireland, a divided Belgium",
+     "subtitle": "Northern Ireland votes to join the Republic; Flanders declares independence",
+     "changes": [
+       {"to": "IRL", "take": [{"from": "United Kingdom", "regions": ["Northern Ireland"]}]},
+       {"to": "FLA", "name": "Flanders", "take": [{"from": "Belgium", "regions": ["Flemish"]}]},
+       {"rename": "BEL", "name": "Wallonia"}
+     ]},
+    {"year": 2045, "title": "Africa's wars wind down, Mexico's begins",
+     "subtitle": "Kivu, Cabo Delgado and Amhara settle; cartels carve out territory",
+     "changes": [
+       {"to": "COD", "take": [{"country": "COD_M23"}]},
+       {"to": "MOZ", "take": [{"country": "MOZ_REB"}]},
+       {"to": "ETH", "take": [{"country": "ETH_AMH"}]},
+       {"to": "MEX_CAR", "name": "Cartels", "rebel": true, "take": [{"from": "Mexico", "provinces": ["Sinaloa", "Michoacán", "Guerrero", "Tamaulipas"]}]}
+     ]},
+    {"year": 2047, "title": "Catalonia and the Basque Country",
+     "subtitle": "Spain loses two regions in a negotiated divorce",
+     "changes": [
+       {"to": "CAT", "name": "Catalonia", "take": [{"from": "Spain", "regions": ["Cataluña"]}]},
+       {"to": "EUS", "name": "Euskadi", "take": [{"from": "Spain", "regions": ["País Vasco"]}]}
+     ]},
+    {"year": 2049, "title": "Taiwan is absorbed",
+     "subtitle": "Beijing completes 'reunification' on the PRC's centenary",
+     "changes": [{"to": "CHN", "take": [{"from": "Taiwan"}]}]},
+    {"year": 2050, "title": "Insurgencies in Balochistan and Biafra",
+     "subtitle": "Pakistan and Nigeria lose control of their peripheries",
+     "changes": [
+       {"to": "PAK_BAL", "name": "Baloch rebels", "rebel": true, "take": [{"from": "Pakistan", "provinces": ["Balochistan"]}]},
+       {"to": "NGA_BIA", "name": "Biafran rebels", "rebel": true, "take": [{"from": "Nigeria", "provinces": ["Abia State", "Anambra State", "Ebonyi State", "Enugu State", "Imo State"]}]}
+     ]},
+    {"year": 2052, "title": "Venezuela seizes the Essequibo",
+     "subtitle": "Guyana loses two-thirds of its territory; Mexico regains the cartel states",
+     "changes": [
+       {"to": "VEN", "take": [{"from": "Guyana", "provinces": ["Barima-Waini", "Cuyuni-Mazaruni", "Potaro-Siparuni", "Upper Takutu-Upper Essequibo", "Pomeroon-Supenaam"]}]},
+       {"to": "MEX", "take": [{"country": "MEX_CAR"}]}
+     ]},
+    {"year": 2054, "title": "Balochistan and Biafra win independence",
+     "subtitle": "Two long insurgencies end in new states",
+     "changes": [
+       {"to": "BAL", "name": "Balochistan", "take": [{"country": "PAK_BAL"}]},
+       {"to": "BIA", "name": "Biafra", "take": [{"country": "NGA_BIA"}, {"from": "Nigeria", "provinces": ["Rivers State", "Bayelsa State", "Akwa Ibom State", "Cross River State", "Delta State"]}]}
+     ]},
+    {"year": 2056, "title": "Alberta leaves Canada; Ambazonia leaves Cameroon",
+     "subtitle": "Oil politics in the north, language politics in the south",
+     "changes": [
+       {"to": "ALBCA", "name": "Alberta", "take": [{"from": "Canada", "provinces": ["Alberta"]}]},
+       {"to": "AMB", "name": "Ambazonia", "take": [{"from": "Cameroon", "provinces": ["Northwest", "Southwest"]}]}
+     ]},
+    {"year": 2058, "title": "Korea reunified",
+     "subtitle": "The North collapses; Seoul absorbs the peninsula",
+     "changes": [{"to": "KOR", "name": "Korea", "take": [{"from": "North Korea"}]}]},
+    {"year": 2060, "title": "Russia's succession crisis",
+     "subtitle": "Revolts in the Caucasus and along the Volga; West Papua rises",
+     "changes": [
+       {"to": "RUS_CAU", "name": "Caucasus rebels", "rebel": true, "take": [{"from": "Russia", "provinces": ["Chechen Republic", "Republic of Dagestan", "Republic of Ingushetia"]}]},
+       {"to": "RUS_VOL", "name": "Volga rebels", "rebel": true, "take": [{"from": "Russia", "provinces": ["Republic of Tatarstan", "Bashkortostan"]}]},
+       {"to": "IDN_PAP", "name": "Papuan rebels", "rebel": true, "take": [{"from": "Indonesia", "provinces": ["Papua", "West Papua"]}]}
+     ]},
+    {"year": 2063, "title": "Romania and Moldova unite",
+     "subtitle": "Transnistria goes to Ukraine; Kosovo joins Albania",
+     "changes": [
+       {"to": "ROU", "take": [{"from": "Moldova", "exclude": ["Transnistria"]}]},
+       {"to": "UKR", "take": [{"from": "Moldova", "provinces": ["Transnistria"]}]},
+       {"to": "ALB", "take": [{"from": "Kosovo"}]}
+     ]},
+    {"year": 2065, "title": "Russia fractures",
+     "subtitle": "The North Caucasus breaks away; Tatarstan settles for autonomy; Alberta joins the USA",
+     "changes": [
+       {"to": "NCF", "name": "North Caucasus", "take": [{"country": "RUS_CAU"}]},
+       {"to": "RUS", "take": [{"country": "RUS_VOL"}]},
+       {"to": "USA", "take": [{"country": "ALBCA"}]}
+     ]},
+    {"year": 2068, "title": "The Gulf Union",
+     "subtitle": "The six Gulf monarchies become one federation",
+     "changes": [{"to": "ARB", "name": "Gulf Union", "color": "#e0b46e", "take": [{"from": "Saudi Arabia"}, {"from": "United Arab Emirates"}, {"from": "Qatar"}, {"from": "Bahrain"}, {"from": "Kuwait"}, {"from": "Oman"}]}]},
+    {"year": 2070, "title": "Quebec becomes a republic",
+     "subtitle": "Canada's confederation loosens further",
+     "changes": [{"to": "QUE", "name": "Quebec", "color": "#d9c55f", "take": [{"from": "Canada", "provinces": ["Quebec"]}]}]},
+    {"year": 2072, "title": "The European Federation",
+     "subtitle": "Thirty states become one federal union",
+     "changes": [{"to": "EUF", "name": "European Federation", "color": "#6f8fd0", "take": [
+       {"from": "France"}, {"from": "Germany"}, {"from": "Italy"}, {"from": "Spain"}, {"from": "Portugal"},
+       {"country": "BEL"}, {"country": "FLA"}, {"from": "Netherlands"}, {"from": "Luxembourg"}, {"from": "Austria"},
+       {"from": "Slovenia"}, {"from": "Croatia"}, {"from": "Slovakia"}, {"from": "Czech Republic"}, {"country": "IRL"},
+       {"from": "Greece"}, {"from": "Finland"}, {"from": "Estonia"}, {"from": "Latvia"}, {"from": "Lithuania"},
+       {"from": "Poland"}, {"from": "Hungary"}, {"country": "ROU"}, {"from": "Bulgaria"}, {"from": "Denmark"},
+       {"from": "Sweden"}, {"country": "SCT"}, {"country": "CAT"}, {"country": "EUS"}, {"from": "Malta"}, {"country": "CYP"}]}]},
+    {"year": 2075, "title": "West Papua and Bangsamoro",
+     "subtitle": "Indonesia lets Papua go; the Philippines loses Muslim Mindanao",
+     "changes": [
+       {"to": "WPP", "name": "West Papua", "take": [{"country": "IDN_PAP"}]},
+       {"to": "BNG", "name": "Bangsamoro", "take": [{"from": "Philippines", "regions": ["Autonomous Region in Muslim Mindanao (ARMM)"]}]}
+     ]},
+    {"year": 2080, "title": "Afghanistan splits north and south",
+     "subtitle": "Khorasan emerges beyond the Hindu Kush",
+     "changes": [{"to": "KHO", "name": "Khorasan", "take": [{"from": "Afghanistan", "provinces": ["Balkh", "Jowzjan", "Faryab", "Sar-e Pol", "Samangan", "Baghlan", "Kunduz", "Takhar", "Badakhshan", "Bamyan"]}]}]},
+    {"year": 2085, "title": "Turkestan",
+     "subtitle": "The five Central Asian republics form a union",
+     "changes": [{"to": "TKS", "name": "Turkestan", "color": "#6fbcb3", "take": [{"from": "Kazakhstan"}, {"from": "Uzbekistan"}, {"from": "Kyrgyzstan"}, {"from": "Tajikistan"}, {"from": "Turkmenistan"}]}]},
+    {"year": 2090, "title": "The East African Federation",
+     "subtitle": "Kenya, Tanzania, Uganda, Rwanda, Burundi and South Sudan unite",
+     "changes": [{"to": "EAF", "name": "East African Federation", "color": "#8fbf8f", "take": [{"from": "Kenya"}, {"from": "United Republic of Tanzania"}, {"from": "Uganda"}, {"from": "Rwanda"}, {"from": "Burundi"}, {"from": "S. Sudan"}]}]},
+    {"year": 2096, "title": "Pashtunistan",
+     "subtitle": "Khyber Pakhtunkhwa joins Afghanistan; Sindh rises against Islamabad",
+     "changes": [
+       {"to": "AFG", "name": "Pashtunistan", "take": [{"from": "Pakistan", "provinces": ["Khyber Pakhtunkhwa", "Federally Administered Tribal Areas"]}]},
+       {"to": "PAK_SND", "name": "Sindhi rebels", "rebel": true, "take": [{"from": "Pakistan", "provinces": ["Sindh"]}]}
+     ]},
+    {"year": 2100, "title": "Pakistan's end",
+     "subtitle": "Sindh becomes independent; Punjab is all that remains",
+     "changes": [{"to": "SND", "name": "Sindh", "take": [{"country": "PAK_SND"}]}]},
+    {"year": 2110, "title": "The South American Union",
+     "subtitle": "Mercosur becomes a state",
+     "changes": [{"to": "SAM", "name": "South American Union", "color": "#a3b86c", "take": [{"from": "Brazil"}, {"from": "Argentina"}, {"from": "Uruguay"}, {"from": "Paraguay"}, {"from": "Bolivia"}]}]},
+    {"year": 2125, "title": "The West African Union",
+     "subtitle": "ECOWAS completes political union",
+     "changes": [{"to": "WAU", "name": "West African Union", "color": "#7fb27a", "take": [{"from": "Nigeria"}, {"from": "Ghana"}, {"from": "Benin"}, {"from": "Togo"}, {"from": "Ivory Coast"}, {"from": "Senegal"}, {"from": "Gambia"}, {"from": "Guinea Bissau"}, {"from": "Guinea"}, {"from": "Sierra Leone"}, {"from": "Liberia"}]}]},
+    {"year": 2140, "title": "China's century of turmoil",
+     "subtitle": "Demographic collapse; revolts in Xinjiang and Tibet",
+     "changes": [
+       {"to": "CHN_XJ", "name": "Uyghur rebels", "rebel": true, "take": [{"from": "China", "provinces": ["Xinjiang"]}]},
+       {"to": "CHN_TB", "name": "Tibetan rebels", "rebel": true, "take": [{"from": "China", "provinces": ["Tibet", "Qinghai"]}]}
+     ]},
+    {"year": 2150, "title": "China lets go",
+     "subtitle": "East Turkestan and Tibet become states; Taiwan regains independence",
+     "changes": [
+       {"to": "ETK", "name": "East Turkestan", "take": [{"country": "CHN_XJ"}]},
+       {"to": "TIB", "name": "Tibet", "take": [{"country": "CHN_TB"}]},
+       {"to": "TWN", "take": [{"from": "Taiwan"}]}
+     ]},
+    {"year": 2165, "title": "The Siberian Republic",
+     "subtitle": "Everything east of the Urals leaves Moscow",
+     "changes": [{"to": "SIB", "name": "Siberia", "color": "#9aa7d6", "take": [{"from": "Russia", "regions": ["Siberian", "Far Eastern"]}]}]},
+    {"year": 2180, "title": "The North American Union",
+     "subtitle": "The USA, Canada, Mexico and Quebec form a federation",
+     "changes": [{"to": "NAU", "name": "North American Union", "color": "#e3a857", "take": [{"from": "United States of America"}, {"from": "Canada"}, {"from": "Mexico"}, {"country": "QUE"}]}]},
+    {"year": 2200, "title": "The Andes join the south",
+     "subtitle": "The South American Union stretches from the Caribbean to Cape Horn",
+     "changes": [{"to": "SAM", "name": "South American Federation", "take": [{"from": "Chile"}, {"from": "Peru"}, {"from": "Ecuador"}, {"from": "Colombia"}, {"from": "Venezuela"}, {"from": "Guyana"}, {"from": "Suriname"}]}]},
+    {"year": 2230, "title": "The Maghreb Union",
+     "subtitle": "North Africa unites from the Atlantic to Tripoli",
+     "changes": [{"to": "MGU", "name": "Maghreb Union", "color": "#cf9b7d", "take": [{"from": "Morocco"}, {"from": "Western Sahara"}, {"from": "Algeria"}, {"from": "Tunisia"}, {"from": "Mauritania"}, {"country": "LBY"}]}]},
+    {"year": 2260, "title": "The Indian Federation",
+     "subtitle": "India, Bangladesh, Nepal, Bhutan and Sri Lanka unite",
+     "changes": [{"to": "IND", "name": "Indian Federation", "take": [{"from": "Bangladesh"}, {"from": "Nepal"}, {"from": "Bhutan"}, {"from": "Sri Lanka"}]}]},
+    {"year": 2300, "title": "The Eurasian Union",
+     "subtitle": "Russia, Siberia, Belarus and Turkestan reunite",
+     "changes": [{"to": "EAU", "name": "Eurasian Union", "color": "#8ea8b0", "take": [{"from": "Russia"}, {"country": "SIB"}, {"from": "Belarus"}, {"country": "TKS"}]}]},
+    {"year": 2350, "title": "The Long Drought",
+     "subtitle": "The Sahel Confederation loses its north; Egypt seizes Sudan's Nile valley",
+     "changes": [
+       {"to": "AES_REB", "name": "Azawad rebels", "rebel": true, "take": [{"from": "Mali", "provinces": ["Gao", "Kidal", "Tombouctou"]}]},
+       {"to": "EGY", "take": [{"from": "Sudan", "provinces": ["Northern", "River Nile"]}]}
+     ]},
+    {"year": 2400, "title": "Southern Africa unites; Azawad is born",
+     "subtitle": "A federation from the Cape to the Congo; the Tuareg win their state",
+     "changes": [
+       {"to": "SAF", "name": "Southern African Federation", "color": "#b98bc9", "take": [{"from": "South Africa"}, {"from": "Namibia"}, {"from": "Botswana"}, {"from": "Zimbabwe"}, {"from": "Zambia"}, {"from": "Mozambique"}, {"from": "Malawi"}, {"from": "Lesotho"}, {"from": "Swaziland"}, {"from": "Angola"}]},
+       {"to": "AZW", "name": "Azawad", "take": [{"country": "AES_REB"}]}
+     ]},
+    {"year": 2450, "title": "The Australasian Union",
+     "subtitle": "Australia, New Zealand and the Pacific islands federate",
+     "changes": [{"to": "ANZ", "name": "Australasian Union", "color": "#d48fb2", "take": [{"from": "Australia"}, {"from": "New Zealand"}, {"from": "Papua New Guinea"}, {"country": "BGV"}, {"from": "Solomon Islands"}, {"from": "Fiji"}, {"from": "Vanuatu"}]}]},
+    {"year": 2500, "title": "The East Asian Community",
+     "subtitle": "China, Korea, Japan and Taiwan form a union",
+     "changes": [{"to": "EAC", "name": "East Asian Community", "color": "#c78a92", "take": [{"from": "China"}, {"country": "KOR"}, {"from": "Japan"}, {"country": "TWN"}]}]},
+    {"year": 2600, "title": "The Great Fragmentation",
+     "subtitle": "The European Federation dissolves into four successor leagues",
+     "changes": [
+       {"to": "WUN", "name": "Western Union", "color": "#7f9fcf", "take": [{"from": "France"}, {"from": "Belgium"}, {"from": "Netherlands"}, {"from": "Luxembourg"}, {"from": "Spain"}, {"from": "Portugal"}, {"from": "Ireland"}, {"from": "United Kingdom", "regions": ["Northern Ireland"]}]},
+       {"to": "MEU", "name": "Mitteleuropa", "color": "#d9c55f", "take": [{"from": "Germany"}, {"from": "Austria"}, {"from": "Czech Republic"}, {"from": "Slovakia"}, {"from": "Hungary"}, {"from": "Poland"}, {"from": "Slovenia"}, {"from": "Croatia"}]},
+       {"to": "BLL", "name": "Baltic League", "color": "#6fbcb3", "take": [{"from": "Finland"}, {"from": "Estonia"}, {"from": "Latvia"}, {"from": "Lithuania"}, {"from": "Sweden"}, {"from": "Denmark"}, {"from": "United Kingdom", "regions": ["Eastern", "Highlands and Islands", "North Eastern", "South Western"]}]},
+       {"to": "MDL", "name": "Mediterranean League", "color": "#e0b46e", "take": [{"from": "Italy"}, {"from": "Greece"}, {"from": "Malta"}, {"from": "Cyprus"}, {"from": "Northern Cyprus"}, {"from": "Bulgaria"}, {"from": "Romania"}, {"from": "Moldova", "exclude": ["Transnistria"]}]}
+     ]},
+    {"year": 2650, "title": "Revolt in Turkestan",
+     "subtitle": "The Eurasian Union's Central Asian provinces rise",
+     "changes": [{"to": "EAU_TKS", "name": "Turkestani rebels", "rebel": true, "take": [{"from": "Kazakhstan"}, {"from": "Uzbekistan"}, {"from": "Kyrgyzstan"}, {"from": "Tajikistan"}, {"from": "Turkmenistan"}]}]},
+    {"year": 2700, "title": "Turkestan restored",
+     "subtitle": "Eurasia lets Central Asia go",
+     "changes": [{"to": "TKS", "take": [{"country": "EAU_TKS"}]}]},
+    {"year": 2750, "title": "The Pan-American Federation",
+     "subtitle": "North and South America become one state",
+     "changes": [{"to": "PAF", "name": "Pan-American Federation", "color": "#e3a857", "take": [{"country": "NAU"}, {"country": "SAM"}, {"from": "Guatemala"}, {"from": "Honduras"}, {"from": "El Salvador"}, {"from": "Nicaragua"}, {"from": "Costa Rica"}, {"from": "Panama"}, {"from": "Belize"}, {"from": "Cuba"}, {"from": "Haiti"}, {"from": "Dominican Republic"}, {"from": "Jamaica"}]}]},
+    {"year": 2820, "title": "The African Federation",
+     "subtitle": "The continent's unions merge",
+     "changes": [{"to": "AFU", "name": "African Federation", "color": "#7fb27a", "take": [{"country": "WAU"}, {"country": "EAF"}, {"country": "SAF"}, {"country": "BIA"}, {"from": "Ethiopia"}, {"from": "Democratic Republic of the Congo"}, {"from": "Republic of the Congo"}, {"from": "Cameroon"}, {"country": "AMB"}, {"from": "Gabon"}, {"from": "Central African Republic"}, {"from": "Chad"}, {"country": "AES"}, {"from": "Sudan"}, {"country": "DAR"}, {"from": "Equatorial Guinea"}]}]},
+    {"year": 2900, "title": "The Terran Compact",
+     "subtitle": "The Americas, Europe's leagues, Africa and Australasia sign a common charter",
+     "changes": [{"to": "UE", "name": "Terran Compact", "color": "#6f8fd0", "take": [{"country": "PAF"}, {"country": "WUN"}, {"country": "MEU"}, {"country": "BLL"}, {"country": "MDL"}, {"country": "AFU"}, {"country": "ANZ"}]}]},
+    {"year": 3000, "title": "The world in 3000",
+     "subtitle": "Eurasia, East Asia, India and the Middle East remain outside the Compact",
+     "changes": []}
+  ]
+}

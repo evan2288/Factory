@@ -103,9 +103,11 @@ def main():
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--outro", type=float, default=6.0)
     ap.add_argument("--max-seconds", type=float, default=None, help="truncate output (for tests)")
+    ap.add_argument("--width", type=int, default=1920)
+    ap.add_argument("--height", type=int, default=1080)
     args = ap.parse_args()
 
-    atlas = Atlas()
+    atlas = Atlas(args.width, args.height)
     W, H = atlas.meta["width"], atlas.meta["height"]
     sc, kf = timeline.build(args.scenario, atlas)
     print(f"{len(kf) - 1} events; {sum(k.hold + k.transition + k.settle for k in kf) + args.outro:.0f}s total",

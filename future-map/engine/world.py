@@ -29,13 +29,14 @@ def _norm(s):
 
 
 class Country:
-    __slots__ = ("id", "name", "color", "label_hint")
+    __slots__ = ("id", "name", "color", "label_hint", "style")
 
-    def __init__(self, cid, name, color=None, label_hint=None):
+    def __init__(self, cid, name, color=None, label_hint=None, style="normal"):
         self.id = cid
         self.name = name
         self.color = color
         self.label_hint = label_hint
+        self.style = style      # "normal" or "rebel" (civil-war faction: hatched, dashed border)
 
     def __repr__(self):
         return f"Country({self.id!r}, {self.name!r})"
@@ -166,7 +167,7 @@ class World:
     def copy(self):
         w = World(self.atlas)
         w.owner = dict(self.owner)
-        w.countries = {k: Country(c.id, c.name, c.color, c.label_hint) for k, c in self.countries.items()}
+        w.countries = {k: Country(c.id, c.name, c.color, c.label_hint, c.style) for k, c in self.countries.items()}
         w._shape_cache = self._shape_cache  # shared: keyed by tile set, so safe
         return w
 
@@ -194,13 +195,15 @@ class World:
         return adj
 
     # ---- mutation -------------------------------------------------------------
-    def transfer(self, tile_ids, to_cid, name=None, color=None):
+    def transfer(self, tile_ids, to_cid, name=None, color=None, style=None):
         """Give tiles to country `to_cid`, creating it if needed. Returns the new World."""
         w = self.copy()
         if to_cid not in w.countries:
-            w.countries[to_cid] = Country(to_cid, name or to_cid, color)
+            w.countries[to_cid] = Country(to_cid, name or to_cid, color, style=style or "normal")
         elif name:
             w.countries[to_cid].name = name
+        if style:
+            w.countries[to_cid].style = style
         for t in tile_ids:
             if t not in w.owner:
                 raise KeyError(f"unknown tile {t}")

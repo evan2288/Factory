@@ -82,6 +82,7 @@ def fits(ctx, text, size, geom, style):
 def render_base(world, atlas, style=STYLE, labels=True):
     """Render the political map for a World into a new ARGB32 surface."""
     W, H = atlas.meta["width"], atlas.meta["height"]
+    S = W / 1920.0  # all pixel sizes below are authored at 1080p and scaled
     surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
     ctx = cairo.Context(surf)
     ctx.set_antialias(cairo.ANTIALIAS_BEST)
@@ -102,6 +103,18 @@ def render_base(world, atlas, style=STYLE, labels=True):
         ctx.set_source_rgb(*rgb(c.color))
         ctx.fill()
 
+    # Civil-war factions: diagonal hatching over the fill.
+    rebels = [c for c in live if c.style == "rebel" and not shapes[c.id].is_empty]
+    if rebels:
+        hatch = _hatch_pattern(style)
+        for c in rebels:
+            ctx.save()
+            add_path(ctx, shapes[c.id])
+            ctx.clip()
+            ctx.set_source(hatch)
+            ctx.paint()
+            ctx.restore()
+
     # Lakes punch through in ocean colour.
     for lk in atlas.lakes:
         add_path(ctx, lk)
@@ -115,13 +128,23 @@ def render_base(world, atlas, style=STYLE, labels=True):
     for c in live:
         add_path(ctx, shapes[c.id])
     ctx.set_source_rgb(*rgb(style["border"]))
-    ctx.set_line_width(style["border_width"])
+    ctx.set_line_width(style["border_width"] * S)
     ctx.stroke()
+
+    # Faction front lines: white dashes over the border so they read as contested.
+    if rebels:
+        for c in rebels:
+            add_path(ctx, shapes[c.id])
+        ctx.set_source_rgba(1, 1, 1, 0.85)
+        ctx.set_line_width(1.2 * S)
+        ctx.set_dash([3.0 * S, 3.0 * S])
+        ctx.stroke()
+        ctx.set_dash([])
 
     # Soft coastline on top so land reads against the dark ocean.
     add_path(ctx, atlas.land_union())
     ctx.set_source_rgba(*rgb(style["coast"]), 0.9)
-    ctx.set_line_width(style["coast_width"])
+    ctx.set_line_width(style["coast_width"] * S)
     ctx.stroke()
 
     if labels:
@@ -131,7 +154,7 @@ def render_base(world, atlas, style=STYLE, labels=True):
             ctx.select_font_face(style["label_font"], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
             ctx.set_font_size(size)
             e = ctx.text_extents(text)
-            pad = 3
+            pad = 3 * S
             return (x - e.width / 2 - pad, y - e.height / 2 - pad, x + e.width / 2 + pad, y + e.height / 2 + pad)
 
         def clear(b):
@@ -139,16 +162,16 @@ def render_base(world, atlas, style=STYLE, labels=True):
 
         for c in sorted(live, key=lambda c: -shapes[c.id].area):
             g = shapes[c.id]
-            if g.area < style["label_min_area"]:
+            if g.area < style["label_min_area"] * S * S:
                 continue
             pt = world.label_point(c.id, g)
             if pt is None:
                 continue
-            size = _label_font_size(g.area, style)
-            text = c.name.upper() if size >= 16 else c.name
-            while size > style["label_min"] and not (fits(ctx, text, size, g, style)
-                                                     and clear(box(text, size, *pt))):
-                size -= 1
+            size = _label_font_size(g.area / (S * S), style) * S
+            text = c.name.upper() if size >= 16 * S else c.name
+            while size > style["label_min"] * S and not (fits(ctx, text, size, g, style)
+                                                         and clear(box(text, size, *pt))):
+                size -= S
             b = box(text, size, *pt)
             if not fits(ctx, text, size, g, style) or not clear(b):
                 continue
@@ -157,6 +180,27 @@ def render_base(world, atlas, style=STYLE, labels=True):
 
     surf.flush()
     return surf
+
+
+def _hatch_pattern(style, S=1.0):
+    """Repeating diagonal dark lines, used to mark civil-war factions."""
+    period = int(round(7 * S))
+    s = cairo.ImageSurface(cairo.FORMAT_ARGB32, period, period)
+    c = cairo.Context(s)
+    c.set_source_rgba(*rgb(style["ocean"]), 0.55)
+    c.set_line_width(1.6 * S)
+    c.move_to(-1, period + 1)
+    c.line_to(period + 1, -1)
+    c.stroke()
+    c.move_to(-1, 1)
+    c.line_to(1, -1)
+    c.stroke()
+    c.move_to(period - 1, period + 1)
+    c.line_to(period + 1, period - 1)
+    c.stroke()
+    p = cairo.SurfacePattern(s)
+    p.set_extend(cairo.EXTEND_REPEAT)
+    return p
 
 
 def draw_highlight(ctx, geom, alpha, style=STYLE):
@@ -171,45 +215,46 @@ def draw_highlight(ctx, geom, alpha, style=STYLE):
 
 
 def draw_hud(ctx, W, H, year, title=None, subtitle=None, alpha=1.0, style=STYLE):
-    """Year counter top-left, caption bottom-centre."""
+    """Year counter top-left, caption bottom-centre. Sizes authored at 1080p."""
+    S = W / 1920.0
     ctx.save()
     # Year
     ctx.select_font_face(style["year_font"], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-    ctx.set_font_size(96)
+    ctx.set_font_size(96 * S)
     ytxt = f"{int(round(year))}" if year >= 0 else f"{int(round(-year))} BC"
     ext = ctx.text_extents(ytxt)
-    ctx.move_to(56, 40 + ext.height)
+    ctx.move_to(56 * S, 40 * S + ext.height)
     ctx.set_source_rgba(*rgb(style["year_color"]), 1.0)
     ctx.show_text(ytxt)
     ctx.select_font_face(style["caption_font"], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size(18)
-    ctx.move_to(58, 40 + ext.height + 30)
+    ctx.set_font_size(18 * S)
+    ctx.move_to(58 * S, 40 * S + ext.height + 30 * S)
     ctx.set_source_rgba(*rgb(style["sub_color"]), 0.9)
     ctx.show_text("AD" if year >= 0 else "")
 
     # Caption
     if title and alpha > 0:
         ctx.select_font_face(style["caption_font"], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(40)
+        ctx.set_font_size(40 * S)
         e1 = ctx.text_extents(title)
         ctx.select_font_face(style["caption_font"], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_font_size(22)
+        ctx.set_font_size(22 * S)
         e2 = ctx.text_extents(subtitle or "")
-        box_w = max(e1.width, e2.width) + 80
-        box_h = 60 + (34 if subtitle else 0) + 30
-        bx, by = (W - box_w) / 2, H - box_h - 28
+        box_w = max(e1.width, e2.width) + 80 * S
+        box_h = (60 + (34 if subtitle else 0) + 30) * S
+        bx, by = (W - box_w) / 2, H - box_h - 28 * S
         ctx.set_source_rgba(*rgb(style["hud_bg"]), 0.78 * alpha)
-        _round_rect(ctx, bx, by, box_w, box_h, 10)
+        _round_rect(ctx, bx, by, box_w, box_h, 10 * S)
         ctx.fill()
         ctx.select_font_face(style["caption_font"], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(40)
-        ctx.move_to((W - e1.width) / 2 - e1.x_bearing, by + 22 + e1.height)
+        ctx.set_font_size(40 * S)
+        ctx.move_to((W - e1.width) / 2 - e1.x_bearing, by + 22 * S + e1.height)
         ctx.set_source_rgba(*rgb(style["caption_color"]), alpha)
         ctx.show_text(title)
         if subtitle:
             ctx.select_font_face(style["caption_font"], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-            ctx.set_font_size(22)
-            ctx.move_to((W - e2.width) / 2 - e2.x_bearing, by + 22 + e1.height + 36)
+            ctx.set_font_size(22 * S)
+            ctx.move_to((W - e2.width) / 2 - e2.x_bearing, by + 22 * S + e1.height + 36 * S)
             ctx.set_source_rgba(*rgb(style["sub_color"]), alpha)
             ctx.show_text(subtitle)
     ctx.restore()

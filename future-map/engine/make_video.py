@@ -39,11 +39,24 @@ def smooth_year(y0, y1, t):
     return y0 + (y1 - y0) * ease(t)
 
 
+def _slim(geom, tol=3.0, min_area=30.0):
+    """Simplify and drop specks (tiny islands) so per-frame buffers stay cheap."""
+    g = geom.simplify(tol)
+    parts = list(g.geoms) if hasattr(g, "geoms") else [g]
+    parts = [p for p in parts if p.area >= min_area]
+    if not parts:
+        return g
+    return shapely.multipolygons(parts) if len(parts) > 1 else parts[0]
+
+
 class Sweep:
     """Per-acquirer animated mask for one transition."""
 
     def __init__(self, group_geom, source_geom, mode):
         self.group = group_geom
+        # Cheap envelope for clipping the sweep: outside the group the old and new
+        # frames are identical, so the mask only needs to be exact-ish, not exact.
+        self.hull = _slim(group_geom).buffer(3.0, quad_segs=1)
         self.mode = mode
         self.src = None
         self.D = 1.0
@@ -54,7 +67,7 @@ class Sweep:
             sample = shapely.points(pts[::step])
             d = shapely.distance(source_geom, sample)
             self.D = float(d.max()) + 2.0
-            self.src = source_geom.intersection(group_geom.buffer(self.D + 8)).simplify(1.0)
+            self.src = _slim(source_geom.intersection(_slim(group_geom).buffer(self.D + 8, quad_segs=1)))
             if self.src.is_empty:
                 self.mode = "bloom"
         if self.mode == "bloom":
@@ -75,7 +88,7 @@ class Sweep:
         d = self.D * ease(t)
         if d <= 0.5:
             return None
-        return self.src.buffer(d, quad_segs=4).intersection(self.group)
+        return self.src.buffer(d, quad_segs=2).intersection(self.hull)
 
 
 def build_sweeps(prev_kf, cur_kf, atlas):

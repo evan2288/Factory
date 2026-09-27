@@ -122,6 +122,17 @@ def _hex_to_rgb(h):
     return tuple(int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
 
 
+def _color_dist(a, b):
+    """Perceptual-ish distance in [0, ~1]: hue difference dominates, lightness helps."""
+    ra, ga, ba = _hex_to_rgb(a)
+    rb, gb, bb = _hex_to_rgb(b)
+    ha, la, sa = colorsys.rgb_to_hls(ra, ga, ba)
+    hb, lb, sb = colorsys.rgb_to_hls(rb, gb, bb)
+    dh = abs(ha - hb)
+    dh = min(dh, 1 - dh) * 2          # 0..1
+    return 0.75 * dh + 0.25 * abs(la - lb) * 2 + 0.1 * abs(sa - sb)
+
+
 def _shift(hexcolor, k):
     """k-th fallback shade when the palette is exhausted locally."""
     r, g, b = _hex_to_rgb(hexcolor)
@@ -231,19 +242,27 @@ class World:
             c = self.countries[cid]
             if only_missing and c.color:
                 continue
-            used = {self.countries[n].color for n in adj[cid] if self.countries[n].color}
-            # Rotate the palette by a stable per-country offset for variety.
+            used = [self.countries[n].color for n in adj[cid] if self.countries[n].color]
+            # Rotate the palette by a stable per-country offset for variety, then
+            # pick the candidate that is most different from every neighbour.
             k = sum(ord(ch) for ch in cid) % len(PALETTE)
             rotated = PALETTE[k:] + PALETTE[:k]
-            pick = next((p for p in rotated if p not in used), None)
-            if pick is None:
+            best, best_d = None, -1.0
+            for p in rotated:
+                d = min((_color_dist(p, u) for u in used), default=1.0)
+                if d > best_d + 1e-9:
+                    best, best_d = p, d
+                    if d >= 0.45:
+                        break
+            if best_d < 0.12:
                 k = 1
                 while True:
-                    pick = _shift(PALETTE[len(adj[cid]) % len(PALETTE)], k)
-                    if pick not in used:
+                    cand = _shift(PALETTE[len(adj[cid]) % len(PALETTE)], k)
+                    if min((_color_dist(cand, u) for u in used), default=1.0) >= 0.12:
+                        best = cand
                         break
                     k += 1
-            c.color = pick
+            c.color = best
 
     # ---- labels ---------------------------------------------------------------
     def label_point(self, cid, geom=None):

@@ -2,6 +2,7 @@
   "title": "THE WORLD, 2025",
   "subtitle": "A speculative history of the next thousand years",
   "start_year": 2025,
+  "labels": false,
   "intro_seconds": 4.0,
   "hold_seconds": 3.2,
   "transition_seconds": 1.1,

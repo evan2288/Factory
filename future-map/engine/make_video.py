@@ -29,17 +29,18 @@ def smooth_year(y0, y1, t):
 class Frames:
     """Yields (surface_a, surface_b, blend, year, caption, cap_alpha, highlight_geom, hl_alpha)."""
 
-    def __init__(self, keyframes, atlas, fps):
+    def __init__(self, keyframes, atlas, fps, labels=True):
         self.kf = keyframes
         self.atlas = atlas
         self.fps = fps
+        self.labels = labels
         self._base = {}
 
     def base(self, i):
         s = self._base.get(i)
         if s is None:
             t0 = time.time()
-            s = render.render_base(self.kf[i].world, self.atlas)
+            s = render.render_base(self.kf[i].world, self.atlas, labels=self.labels)
             self._base[i] = s
             print(f"  keyframe {i} ({self.kf[i].year}) rendered in {time.time() - t0:.1f}s", file=sys.stderr)
         return s
@@ -103,6 +104,8 @@ def main():
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--outro", type=float, default=6.0)
     ap.add_argument("--max-seconds", type=float, default=None, help="truncate output (for tests)")
+    ap.add_argument("--labels", choices=["on", "off"], default=None,
+                    help="country name labels (default: scenario's \"labels\" key, else on)")
     ap.add_argument("--width", type=int, default=1920)
     ap.add_argument("--height", type=int, default=1080)
     args = ap.parse_args()
@@ -113,7 +116,8 @@ def main():
     print(f"{len(kf) - 1} events; {sum(k.hold + k.transition + k.settle for k in kf) + args.outro:.0f}s total",
           file=sys.stderr)
 
-    frames = Frames(kf, atlas, args.fps)
+    labels = sc.get("labels", True) if args.labels is None else args.labels == "on"
+    frames = Frames(kf, atlas, args.fps, labels=labels)
     frames.outro = args.outro
     out_dir = Path(args.out).parent if args.out else Path(__file__).resolve().parent.parent / "out"
     out_dir.mkdir(parents=True, exist_ok=True)

@@ -41,6 +41,7 @@ class Keyframe:
     hold: float
     transition: float
     settle: float
+    end: float = 0.0           # year the change is complete
     changed_ids: List[str] = field(default_factory=list)
     anim: dict = field(default_factory=dict)   # country_id -> forced animation mode
 
@@ -58,10 +59,12 @@ def build(scenario_path, atlas: Atlas):
     settle = sc.get("settle_seconds", 1.5)
 
     world = World.present_day(atlas, sc.get("group_dependencies", True))
-    frames = [Keyframe(sc.get("start_year", 2025), sc.get("title", ""), sc.get("subtitle", ""),
-                       world, None, sc.get("intro_seconds", 4.0), 0, 0)]
+    start_year = sc.get("start_year", 2025)
+    frames = [Keyframe(start_year, sc.get("title", ""), sc.get("subtitle", ""),
+                       world, None, sc.get("intro_seconds", 4.0), 0, 0, end=start_year)]
+    default_years = sc.get("years", 6)
 
-    for ev in sc["events"]:
+    for ev in sorted(sc["events"], key=lambda e: e["year"]):
         before = world
         moved = []
         anim = {}
@@ -83,6 +86,6 @@ def build(scenario_path, atlas: Atlas):
         changed = unary_union([atlas.geom[t] for t in moved]) if moved else None
         frames.append(Keyframe(ev["year"], ev.get("title", ""), ev.get("subtitle", ""), world, changed,
                                ev.get("hold", hold), ev.get("transition", trans), ev.get("settle", settle),
-                               moved, anim))
+                               ev["year"] + ev.get("years", default_years), moved, anim))
         _ = before
     return sc, frames

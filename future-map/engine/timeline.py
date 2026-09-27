@@ -42,6 +42,7 @@ class Keyframe:
     transition: float
     settle: float
     changed_ids: List[str] = field(default_factory=list)
+    anim: dict = field(default_factory=dict)   # country_id -> forced animation mode
 
 
 def _resolve_take(atlas: Atlas, world: World, item):
@@ -63,6 +64,7 @@ def build(scenario_path, atlas: Atlas):
     for ev in sc["events"]:
         before = world
         moved = []
+        anim = {}
         for ch in ev.get("changes", []):
             if "rename" in ch:
                 world = world.rename(ch["rename"], ch["name"])
@@ -74,11 +76,13 @@ def build(scenario_path, atlas: Atlas):
                     tiles += _resolve_take(atlas, world, item)
                 tiles = [t for t in tiles if world.owner[t] != ch["to"]]
                 moved += tiles
+                if ch.get("anim"):
+                    anim[ch["to"]] = ch["anim"]
                 world = world.transfer(tiles, ch["to"], ch.get("name"), ch.get("color"),
                                        "rebel" if ch.get("rebel") else None)
         changed = unary_union([atlas.geom[t] for t in moved]) if moved else None
         frames.append(Keyframe(ev["year"], ev.get("title", ""), ev.get("subtitle", ""), world, changed,
                                ev.get("hold", hold), ev.get("transition", trans), ev.get("settle", settle),
-                               moved))
+                               moved, anim))
         _ = before
     return sc, frames

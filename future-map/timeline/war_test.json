@@ -1,0 +1,12 @@
+{
+  "title": "WAR TEST", "subtitle": "", "start_year": 2590, "labels": false,
+  "intro_seconds": 1.0, "hold_seconds": 1.5, "transition_seconds": 2.5, "settle_seconds": 1.0,
+  "events": [
+    {"year": 2600, "title": "Mexico reconquers the Southwest", "subtitle": "",
+     "changes": [{"to": "MEX", "take": [{"from": "United States of America", "provinces": ["California", "Arizona", "New Mexico", "Texas", "Nevada", "Utah"]}]}]},
+    {"year": 2612, "title": "The Southwest is retaken", "subtitle": "",
+     "changes": [{"to": "USA", "take": [{"from": "United States of America", "provinces": ["California", "Arizona", "New Mexico", "Texas", "Nevada", "Utah"]}]}]},
+    {"year": 2620, "title": "Cascadia secedes", "subtitle": "",
+     "changes": [{"to": "CAS", "name": "Cascadia", "take": [{"from": "United States of America", "provinces": ["Washington", "Oregon", "Idaho"]}, {"from": "Canada", "provinces": ["British Columbia"]}]}]}
+  ]
+}

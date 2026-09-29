@@ -506,7 +506,8 @@ function frame(now) {
     }
   }
 
-  if (game.state === 'playing') update(dt, t);
+  // `freeze` lets scripted tools step the simulation themselves (see scripts/assets.mjs).
+  if (game.state === 'playing' && !game.freeze) update(dt, t);
   if (game.scene) renderer.render(game.scene, camera);
 }
 

@@ -15,7 +15,7 @@ const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=sw
 async function openLevel(page, level) {
   await page.goto(`http://localhost:4176/?nolock&level=${level}`);
   await page.waitForSelector('#menu:not(.hidden)', { timeout: 20000 });
-  await page.evaluate((id) => window.__curfew.startLevel(id), level);
+  await page.evaluate((id) => { window.__curfew.startLevel(id); window.__curfew.freeze = true; }, level);
   await page.waitForTimeout(300);
   // Hide HUD text that shouldn't be in covers/videos (cursor, hints, intro banner).
   await page.addStyleTag({ content: '#message,#hint,#crosshair{display:none!important}' });

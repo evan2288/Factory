@@ -57,10 +57,11 @@ try {
       g.enforcers.slice(1).forEach((x) => { x.pos.set(70, 0, 30); x.sync(); x.update = () => {}; });
       const e = g.enforcers[0];
       // A patrol that sweeps and walks but can never see or hear the player: pure choreography.
-      e.pos.set(29, 0, 17); e.yaw = e.lookBase = -Math.PI / 2; e.path = []; e.wait = 4; e.sync();
-      e.visibility = () => 0; e.hear = () => {};
-      e.pickPatrolTarget = function () { this.goTo(new THREE.Vector3(this.pos.x < 25 ? 29 : 21, 0, 17)); };
+      // It crosses the far end of the corridor (x=31) between z=13 and z=21, sweeping at each end.
       window.THREE = { Vector3: g.player.pos.constructor };
+      e.pos.set(31, 0, 13); e.yaw = e.lookBase = Math.PI; e.path = []; e.wait = 1.5; e.sync();
+      e.visibility = () => 0; e.hear = () => {};
+      e.pickPatrolTarget = function () { this.goTo(new THREE.Vector3(31, 0, this.pos.z < 17 ? 21 : 13)); this.wait = 1.5; };
       g.player.pos.set(9, 0, 17); g.player.yaw = -Math.PI / 2; g.player.pitch = 0;
       g.player.setFlashlight(true);
     });
@@ -74,10 +75,10 @@ try {
         const p = g.player;
         p.keys.clear();
         const e = g.enforcers[0];
-        if (t < 3.5) { p.keys.add('KeyW'); }                       // walk in with the flashlight
-        else if (t < 4) { p.setFlashlight(false); }                // kill the light: the beam ahead is enough
-        else if (t < 7) { p.keys.add('KeyC'); p.keys.add('KeyW'); } // creep forward crouched
-        else if (t < 11) { p.keys.add('KeyC'); e.detection = Math.min(0.85, e.detection + 0.02); p.yaw += Math.sin(t * 2) * 0.004; } // hold still, tension rises
+        if (t < 3) { p.keys.add('KeyW'); }                         // walk in with the flashlight
+        else if (t < 3.5) { p.setFlashlight(false); }              // kill the light: the beam ahead is enough
+        else if (t < 6) { p.keys.add('KeyC'); p.keys.add('KeyW'); } // creep forward crouched
+        else if (t < 11) { p.keys.add('KeyC'); e.detection = Math.min(0.85, e.detection + 0.015); p.yaw += Math.sin(t * 2) * 0.003; } // hold still, tension rises
         else if (t < 14.5) { p.keys.add('ShiftLeft'); p.keys.add('KeyS'); p.yaw += 0.03; e.detection = 0.3; } // sprint back and turn
         else { p.keys.add('KeyC'); e.detection = 0; }
         g.simulate(1 / 12, 1 / 24);

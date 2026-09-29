@@ -4,6 +4,7 @@ export class Sound {
     this.ctx = null;
     this.master = null;
     this.muted = false;
+    this.volume = 0.8;
   }
 
   // Must be called from a user gesture (browsers block autoplay).
@@ -16,7 +17,7 @@ export class Sound {
     if (!AC) return;
     this.ctx = new AC();
     this.master = this.ctx.createGain();
-    this.master.gain.value = this.muted ? 0 : 0.8;
+    this.master.gain.value = this.muted ? 0 : this.volume;
     this.master.connect(this.ctx.destination);
     this.noiseBuf = this.makeNoise(2);
     this.startAmbience();
@@ -27,7 +28,29 @@ export class Sound {
 
   setMuted(m) {
     this.muted = m;
-    if (this.master) this.master.gain.value = m ? 0 : 0.8;
+    if (this.master) this.master.gain.value = m ? 0 : this.volume;
+  }
+
+  setVolume(v) {
+    this.volume = Math.max(0, Math.min(1, v));
+    if (this.master && !this.muted) this.master.gain.value = this.volume;
+  }
+
+  // Camera alarm: a hard two-tone klaxon.
+  alarm() {
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        this.tone({ freq: 740, dur: 0.22, vol: 0.28, type: 'square' });
+        setTimeout(() => this.tone({ freq: 555, dur: 0.22, vol: 0.28, type: 'square' }), 230);
+      }, i * 480);
+    }
+  }
+
+  // Steel shutters grinding open.
+  door() {
+    this.noiseBurst({ dur: 1.2, freq: 260, q: 0.6, vol: 0.45, type: 'lowpass' });
+    this.tone({ freq: 70, dur: 1.1, vol: 0.2, type: 'sawtooth', slide: 30 });
+    setTimeout(() => this.tone({ freq: 1200, dur: 0.08, vol: 0.12, type: 'sine' }), 1100);
   }
 
   makeNoise(seconds) {

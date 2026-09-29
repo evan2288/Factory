@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Curfew</title>
-  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="stylesheet" href="./src/style.css" />
+  <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>
 </head>
 <body>
   <div id="game"></div>
@@ -17,40 +18,63 @@
     <div id="stamina"><div id="stamina-fill"></div></div>
     <div id="crosshair"></div>
     <div id="message"></div>
+    <div id="hint"></div>
   </div>
   <div id="vignette"></div>
   <div id="locker-view" class="hidden"></div>
   <div id="danger"></div>
 
-  <div id="menu" class="screen">
+  <div id="loading" class="screen"><h1>CURFEW</h1><p class="tag">Loading…</p></div>
+
+  <div id="menu" class="screen hidden">
     <h1>CURFEW</h1>
     <p class="tag">The Order took the city. Curfew began at dusk.<br />You were still outside.</p>
-    <p class="goal">Find <b>3 radio parts</b> in the abandoned block, then reach the <b>sewer hatch</b>.<br />Don't let the patrols see you.</p>
     <button id="play">Play</button>
+    <div id="levels" class="levels"></div>
+    <button id="night" class="level night"><span class="n">∞</span><span class="name">Night Shift</span><span class="best"></span></button>
+    <div class="row">
+      <button id="settings-m" class="secondary">Settings</button>
+    </div>
     <div class="controls">
       <div><kbd>WASD</kbd> move</div>
       <div><kbd>Mouse</kbd> look</div>
       <div><kbd>Shift</kbd> sprint (loud)</div>
       <div><kbd>C</kbd> crouch (quiet, hide behind crates)</div>
-      <div><kbd>E</kbd> hide in locker / pick up</div>
+      <div><kbd>E</kbd> hide in locker</div>
       <div><kbd>F</kbd> flashlight (they'll see it)</div>
       <div><kbd>M</kbd> mute &nbsp; <kbd>Esc</kbd> pause</div>
     </div>
-    <div id="best"></div>
   </div>
 
   <div id="pause" class="screen hidden">
     <h2>Paused</h2>
     <button id="resume">Resume</button>
-    <button id="restart-p" class="secondary">Restart</button>
+    <div class="row">
+      <button id="restart-p" class="secondary">Restart level</button>
+      <button id="settings-p" class="secondary">Settings</button>
+      <button id="menu-p" class="secondary">Main menu</button>
+    </div>
   </div>
 
   <div id="end" class="screen hidden">
     <h2 id="end-title"></h2>
     <p id="end-text"></p>
-    <button id="again">Try again</button>
+    <button id="next">Next level</button>
+    <button id="continue">Continue from last part <small>(watch an ad)</small></button>
+    <div class="row">
+      <button id="again" class="secondary">Restart level</button>
+      <button id="menu-e" class="secondary">Main menu</button>
+    </div>
   </div>
 
-  <script type="module" src="/src/main.js"></script>
+  <div id="settings" class="screen hidden">
+    <h2>Settings</h2>
+    <label>Mouse sensitivity <input id="sens" type="range" min="0.4" max="2" step="0.1" /></label>
+    <label>Volume <input id="vol" type="range" min="0" max="1" step="0.05" /></label>
+    <label class="check"><input id="invert" type="checkbox" /> Invert vertical look</label>
+    <button id="settings-back">Back</button>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>

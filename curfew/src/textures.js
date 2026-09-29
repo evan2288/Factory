@@ -203,3 +203,34 @@ export function posterTexture(seed) {
     }
   });
 }
+
+export function doorTexture() {
+  return canvasTexture(256, (g, s) => {
+    const r = rand(66);
+    g.fillStyle = '#3b3f44';
+    g.fillRect(0, 0, s, s);
+    // Horizontal shutter slats.
+    for (let y = 0; y < s; y += 16) {
+      g.fillStyle = (y / 16) % 2 ? '#34383c' : '#42474c';
+      g.fillRect(0, y, s, 14);
+      g.fillStyle = 'rgba(0,0,0,0.5)';
+      g.fillRect(0, y + 14, s, 2);
+    }
+    blotches(g, s, r, 10, 'rgba(110,60,25,0.4)', 40);
+    speckle(g, s, r, 1500, ['#2c3033', '#4c5157']);
+    // Warning stripe across the middle.
+    for (let x = -s; x < s * 2; x += 40) {
+      g.fillStyle = '#b89a1e';
+      g.beginPath();
+      g.moveTo(x, s * 0.5);
+      g.lineTo(x + 20, s * 0.5);
+      g.lineTo(x + 40, s * 0.62);
+      g.lineTo(x + 20, s * 0.62);
+      g.fill();
+    }
+    g.fillStyle = '#e8e0cc';
+    g.font = 'bold 22px Impact, sans-serif';
+    g.textAlign = 'center';
+    g.fillText('SEALED BY ORDER', s / 2, s * 0.3);
+  });
+}

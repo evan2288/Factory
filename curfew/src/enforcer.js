@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { isSolid, toCell, toWorld } from './level-data.js';
 import { findPath, hasLineOfSight, openCells } from './grid.js';
+import { isLit } from './world.js';
 
 const VIEW_DIST = 17;
 const FOV = 0.62; // half-angle of the flashlight beam (radians)
@@ -159,7 +160,7 @@ export class Enforcer {
 
   // How visible the player is to this enforcer right now (0 = not at all).
   visibility(ctx) {
-    const { player, lights } = ctx;
+    const { player, world } = ctx;
     if (player.hidden) return 0;
     const head = player.head();
     const dx = head.x - this.pos.x;
@@ -179,18 +180,23 @@ export class Enforcer {
     if (player.sprinting) v *= 1.4;
     else if (!player.moving) v *= 0.6;
     if (player.flashOn) v *= 1.9;
-    const lit = lights.some((l) => l.light.intensity > 1 && l.pos.distanceTo(head) < 4.5);
-    v *= lit ? 1.35 : 0.75;
+    v *= isLit(world, head) ? 1.35 : 0.75;
     return v;
   }
 
-  hear(pos, radius, ctx) {
+  hear(pos, radius, ctx, alarm = false) {
     if (this.state === 'chase' || this.state === 'check') return;
     if (this.pos.distanceTo(pos) > radius) return;
     this.lastKnown = pos.clone();
     this.lookTimer = 0;
     this.goTo(pos);
-    this.setState('suspicious', ctx);
+    if (alarm) this.detection = Math.max(this.detection, 0.6);
+    this.setState(alarm ? 'search' : 'suspicious', ctx);
+  }
+
+  // Called when doors open: patrol routes may now use the new cells.
+  refreshOpenCells() {
+    this.open = openCells(this.level);
   }
 
   update(dt, ctx) {

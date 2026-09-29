@@ -2,7 +2,7 @@
 
 **Status: SITE UNREACHABLE FROM THIS ENVIRONMENT. Nothing was captured.**
 
-Attempted 2026-09-29T12:31:57Z from a Claude Code cloud session.
+Attempted 2026-09-29T12:31:57Z and again 2026-09-29T12:41:34Z from a Claude Code cloud session.
 
 ## What was tried
 
@@ -42,6 +42,23 @@ Then re-run the capture task. Expected outputs in this folder once it succeeds:
 Capture the pages from a machine that can reach the site (browser "Save page as…", full-page
 screenshots via DevTools or a browser extension) and commit them into this folder with the layout above.
 
+## Second attempt 2026-09-29T12:41:34Z — still blocked
 
-## Update 2026-09-29
-The page text was pasted into the parent session by Evan and saved as `method.md`. Screenshots and HTML are still missing; the network policy still blocks the domain.
+The task said the environment's network policy had been opened. From inside this session it has not
+taken effect: every outbound host, including `example.com`, is still refused, so the session is most likely
+still running under the old policy (a new session, or a container restart, may be needed after editing it).
+
+Exact errors recorded:
+
+1. `curl -sS -L https://katieglows.com, https://katieglows.com/method and https://www.katieglows.com` →
+   `curl: (56) CONNECT tunnel failed, response 403` (HTTP code `000`, 0 bytes).
+2. Proxy status (`$HTTPS_PROXY/__agentproxy/status`, `recentRelayFailures`) for `katieglows.com:443`:
+   `connect_rejected — gateway answered 403 to CONNECT (policy denial or upstream failure)`.
+3. Claude's WebFetch tool (runs outside the container) →
+   `EGRESS_BLOCKED — Access to katieglows.com is blocked by the network egress proxy.`
+4. Playwright/Chromium not attempted: it routes through the same proxy and would hit the same 403.
+
+The Markdown transcriptions the owner pasted (index.md / method.md) were not present on the branch at this
+attempt, so there was nothing in this folder to preserve beyond this file.
+
+Nothing below the first "Status" line has been captured yet; the layout described in "How to unblock" still applies.

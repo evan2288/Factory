@@ -9,11 +9,11 @@ Intended layout per site (`context/sites/<site>/`):
 - `<slug>.md` — faithful Markdown transcription of all visible text, in order
 - `NOTES.md` — tech stack signals, fonts, colours, forms and their submit targets, load notes, and (for katieglows) what /method sells
 
-## Capture status (2026-09-29T12:31:57Z)
+## Capture status (2026-09-29T12:31:57Z, re-checked 2026-09-29T12:41:34Z)
 
 | Site | Status |
 |------|--------|
-| memecpm.com | NOT CAPTURED — host blocked by the cloud environment's egress policy |
-| katieglows.com (incl. /method) | NOT CAPTURED — host blocked by the cloud environment's egress policy |
+| memecpm.com | NOT CAPTURED — host blocked by the cloud environment's egress policy (still 403 on re-check) |
+| katieglows.com (incl. /method) | NOT CAPTURED — host blocked by the cloud environment's egress policy (still 403 on re-check) |
 
 See each site's `NOTES.md` for details and how to unblock.

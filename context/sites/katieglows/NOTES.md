@@ -41,3 +41,7 @@ Then re-run the capture task. Expected outputs in this folder once it succeeds:
 
 Capture the pages from a machine that can reach the site (browser "Save page as…", full-page
 screenshots via DevTools or a browser extension) and commit them into this folder with the layout above.
+
+
+## Update 2026-09-29
+The page text was pasted into the parent session by Evan and saved as `method.md`. Screenshots and HTML are still missing; the network policy still blocks the domain.

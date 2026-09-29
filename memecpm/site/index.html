@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>memecpm — One video in. A hundred clips out. Paid by the view.</title>
+<meta name="description" content="memecpm turns footage you already have into 100–300 posting-ready clips a month, posts them across a network that has sold $10,453 of product organically, and bills by verified views.">
+<link rel="canonical" href="https://memecpm.com/">
+<meta property="og:title" content="memecpm — One video in. A hundred clips out.">
+<meta property="og:description" content="Bulk clipping plus distribution for DTC and Amazon brands. $200 pilot: 25 clips from one video in 7 days.">
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --panel2:#171b25; --line:#242a38;
+    --text:#eef1f7; --muted:#a3abbd; --accent:#8cff5e; --accent2:#5ee0ff; --warn:#ffd166;
+    --radius:16px; --max:1100px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent2)}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+  header{position:sticky;top:0;z-index:10;background:rgba(11,13,18,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{font-weight:800;letter-spacing:-.02em;font-size:20px;color:var(--text);text-decoration:none}
+  .brand span{color:var(--accent)}
+  nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0}
+  nav ul a{color:var(--muted);text-decoration:none;font-size:15px}
+  nav ul a:hover{color:var(--text)}
+  .btn{display:inline-block;padding:12px 20px;border-radius:12px;font-weight:700;text-decoration:none;border:1px solid transparent;transition:transform .08s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent);color:#08110a}
+  .btn-ghost{border-color:var(--line);color:var(--text);background:transparent}
+  .btn-sm{padding:9px 14px;font-size:14px}
+  section{padding:72px 0;border-bottom:1px solid var(--line)}
+  h1{font-size:clamp(34px,5.4vw,60px);line-height:1.05;letter-spacing:-.03em;margin:0 0 18px;font-weight:800}
+  h2{font-size:clamp(26px,3.4vw,38px);letter-spacing:-.02em;margin:0 0 14px;font-weight:800}
+  h3{font-size:19px;margin:0 0 8px}
+  .lead{font-size:19px;color:var(--muted);max-width:720px;margin:0 0 28px}
+  .kicker{color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;margin-bottom:12px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .tiny{color:var(--muted);font-size:14px}
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr} nav ul{display:none} section{padding:52px 0}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .stat{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .stat.big{font-size:56px;color:var(--accent)}
+  .stat-label{color:var(--muted);margin-top:6px;font-size:14px}
+  .steps{counter-reset:s}
+  .step{position:relative;padding-left:56px}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:40px;height:40px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font-weight:800;color:var(--accent)}
+  .step p{margin:6px 0 0;color:var(--muted)}
+  .price{display:flex;flex-direction:column;height:100%}
+  .price .amt{font-size:34px;font-weight:800;letter-spacing:-.03em;margin:8px 0 4px}
+  .price .amt small{font-size:15px;color:var(--muted);font-weight:500}
+  .price ul{padding-left:18px;margin:12px 0 18px;color:var(--muted)}
+  .price li{margin:6px 0}
+  .price .btn{margin-top:auto;text-align:center}
+  .featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(140,255,94,.12);color:var(--accent);margin-bottom:6px}
+  .faq details{border-top:1px solid var(--line);padding:14px 0}
+  .faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}
+  .faq summary::after{content:"+";color:var(--muted)}
+  .faq details[open] summary::after{content:"–"}
+  .faq p{color:var(--muted);margin:8px 0 0}
+  .placeholder{background:repeating-linear-gradient(135deg,var(--panel2) 0 12px,var(--panel) 12px 24px);border:1px dashed var(--line);border-radius:12px;display:grid;place-items:center;color:var(--muted);font-size:14px;text-align:center;padding:16px}
+  .clipgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .clip{aspect-ratio:9/16;border-radius:10px;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:flex-end;padding:10px;font-size:12px;font-weight:700}
+  .clip span{background:rgba(0,0,0,.55);padding:4px 6px;border-radius:6px}
+  footer{padding:36px 0;color:var(--muted);font-size:13px}
+  .band{background:linear-gradient(180deg,rgba(140,255,94,.06),transparent)}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  td,th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
+  th{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top">meme<span>cpm</span></a>
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="/clippers">For clippers</a></li>
+      </ul>
+      <a class="btn btn-primary btn-sm" href="#pilot">Start a $200 pilot</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="band">
+  <div class="wrap">
+    <div class="kicker">Bulk clipping + distribution for DTC and Amazon brands</div>
+    <h1>One video in.<br>A hundred clips out.<br>Paid for by the view.</h1>
+    <p class="lead">I turn footage you already have into 100–300 posting-ready clips a month, post them across a network that has already sold <strong style="color:var(--text)">$10,453</strong> of product organically, and charge by verified views, not by the post.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#pilot">Start a $200 pilot</a>
+      <a class="btn btn-ghost" href="#proof">See the proof</a>
+      <span class="tiny">Founding-client rates · taking 5 brands this quarter</span>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="kicker">Tracked sales · Amazon US · organic only</div>
+    <div class="grid g2" style="align-items:stretch">
+      <div class="card">
+        <div class="stat big">$10,453</div>
+        <div class="stat-label">299 orders from organic short-form videos. No ad spend.</div>
+        <table style="margin-top:18px">
+          <tr><th>Clicks</th><th>Product views</th><th>Add to carts</th><th>Orders</th></tr>
+          <tr><td>20,641</td><td>19,823</td><td>1,982</td><td>299</td></tr>
+        </table>
+        <p class="tiny" style="margin:14px 0 0">Source: Levanta attribution dashboard · <a href="#dashboard">View the dashboard</a></p>
+      </div>
+      <div class="grid g3" style="gap:12px">
+        <div class="card"><div class="stat">1.3M</div><div class="stat-label">views in week one</div></div>
+        <div class="card"><div class="stat">8K</div><div class="stat-label">saves on one reel</div></div>
+        <div class="card"><div class="stat">299</div><div class="stat-label">tracked orders</div></div>
+        <div class="card" style="grid-column:1/-1"><div class="placeholder" style="height:120px">Screenshots of the three reels (1.8K likes / 2K saves · 9.5K likes / 8K saves · 2.9K likes / 1.7K saves) go here</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="kicker">How it works</div>
+    <h2>From one video to a bank of clips in 7 days</h2>
+    <div class="grid g2 steps" style="margin-top:26px">
+      <div class="card step"><h3>Send footage</h3><p>A founder video, product demos, UGC you own, a podcast, a YouTube channel, a livestream. Drop it in a shared folder with the claims you're allowed to make.</p></div>
+      <div class="card step"><h3>I find the moments</h3><p>Every source is transcribed and scored for hooks: the quote, the demo, the before-and-after, the number, the objection answered. The top moments get cut.</p></div>
+      <div class="card step"><h3>Each cut becomes three clips</h3><p>Reframed to 9:16 with the speaker tracked in frame, word-timed captions, an on-screen hook in the first second, a music bed, and three different opening hooks so we can test what holds attention.</p></div>
+      <div class="card step"><h3>You get a bank, not a zip file</h3><p>Clips land in a Drive folder organised by source and week, with a tracker sheet: hook text, suggested caption, status dropdown, who posted it where. Your team, or your AI tools, post straight from it.</p></div>
+      <div class="card step" style="grid-column:1/-1"><h3>Or I post them</h3><p>On the Distribution plans the clips go out daily across my page network and a vetted clipper community, with a free guide and comment-to-DM automation that carries your link. You see views, clicks and the top performers every week.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">What a clip looks like</div>
+    <h2>One 38-minute video → 31 cuts → 93 clips</h2>
+    <p class="lead">Every clip: 9:16, captions, hook text placed clear of the face, music under speech, three hook variants per cut. Delivered in a Drive bank with a tracker.</p>
+    <div class="grid g2">
+      <div class="card"><div class="placeholder" style="aspect-ratio:16/9">Still from the source video (before)</div><p class="tiny" style="margin:10px 0 0">Source: 38:12, founder talking through the product</p></div>
+      <div class="card">
+        <div class="clipgrid">
+          <div class="clip"><span>Why I stopped using…</span></div><div class="clip"><span>3 things nobody tells you</span></div><div class="clip"><span>Before / after</span></div>
+          <div class="clip"><span>The $9 mistake</span></div><div class="clip"><span>Watch what happens</span></div><div class="clip"><span>Read caption ↓</span></div>
+          <div class="clip"><span>Day 1 vs day 30</span></div><div class="clip"><span>Don't buy this until…</span></div><div class="clip"><span>Here's the list ↓</span></div>
+        </div>
+        <p class="tiny" style="margin:10px 0 0">Replace with 9 real clip stills; embed 3–4 clips with "Sound on" below.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="kicker">Distribution</div>
+    <h2>I don't just make the clips. I know where they go.</h2>
+    <p class="lead">These are pages I built and run myself. The same network drove the sales above. On the Distribution plans I run that system for your product: proven angles, daily posting, a free guide written for your audience as the lead magnet, and ManyChat automation so anyone who comments a keyword gets the guide and your product link by DM.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Page network</h3><p class="tiny">Owned accounts in skincare, wellness and pet niches, posting daily.</p></div>
+      <div class="card"><h3>Clipper community</h3><p class="tiny">Vetted clippers paid per 1,000 verified views, under the same rules the big campaigns use: tier-1 audience, captions, 30 days live, no boosting. <a href="/clippers">How clippers get paid →</a></p></div>
+      <div class="card"><h3>Comment-to-DM</h3><p class="tiny">A free guide as the hook; ManyChat delivers it and your link automatically. Every paid post carries #ad or a paid-partnership label.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="kicker">Pricing</div>
+    <h2>Four ways to work together</h2>
+    <p class="tiny" style="margin-bottom:26px">Founding-client rates for my first brands. Month to month. First month paid before production starts.</p>
+    <div class="grid g4">
+      <div class="card price" id="pilot">
+        <span class="tag">Try it first</span>
+        <h3>Pilot</h3>
+        <div class="amt">$200 <small>once</small></div>
+        <p class="tiny">25 clips from one video, in 7 days.</p>
+        <ul><li>Two hook variants per cut</li><li>Drive folder + tracker</li><li>Credited to your first month</li></ul>
+        <a class="btn btn-primary" href="mailto:evan2harris2@gmail.com?subject=memecpm%20pilot">Start the pilot</a>
+      </div>
+      <div class="card price">
+        <h3>Clips</h3>
+        <div class="amt">$750 <small>/ month</small></div>
+        <p class="tiny">100 posting-ready clips from up to 4 source videos.</p>
+        <ul><li>Three opening hooks per cut</li><li>Captions, 9:16 reframe, hook text, music bed</li><li>Weekly batches to your Drive bank + tracker</li><li>Up to 3 rounds of changes per batch</li><li>Use on your accounts and in ads</li></ul>
+        <a class="btn btn-ghost" href="#pilot">Start with a pilot</a>
+      </div>
+      <div class="card price featured">
+        <span class="tag">Most brands</span>
+        <h3>Clips + Distribution</h3>
+        <div class="amt">$1,500 <small>/ month</small></div>
+        <p class="tiny">Everything in Clips, doubled (200 clips, 8 sources), plus the system that turns views into buyers.</p>
+        <ul><li>Posted daily across my page network</li><li>Starter clipper campaign ($300 of paid views) included</li><li>Free guide + ManyChat comment-to-DM</li><li>Weekly report: views, clicks, top performers</li></ul>
+        <a class="btn btn-primary" href="#pilot">Start with a pilot</a>
+      </div>
+      <div class="card price">
+        <h3>Pay per view</h3>
+        <div class="amt">$2.50 <small>/ 1,000 verified views</small></div>
+        <p class="tiny">Reach, priced like media. 200 clips a month included. $1,000 monthly minimum (400,000 views).</p>
+        <ul><li>Page network + clipper community</li><li>Views verified at 72 h and 30 days</li><li>Boosted or flagged traffic removed before billing</li><li>Weekly verified view log</li></ul>
+        <a class="btn btn-ghost" href="mailto:evan2harris2@gmail.com?subject=memecpm%20pay-per-view">Talk about a campaign</a>
+      </div>
+    </div>
+    <p class="tiny" style="margin-top:18px"><strong>Add-ons:</strong> AI spokesperson videos for brands with no footage, $25 each (min. 10) · extra source videos $75 · 48-hour rush on the first batch +$200.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Guarantees</div>
+    <div class="grid g4">
+      <div class="card"><h3>On time or your money back</h3><p class="tiny">Your first batch arrives within 7 days of your brief, or you get a full refund.</p></div>
+      <div class="card"><h3>Up to 3 rounds of changes</h3><p class="tiny">Not quite right? Each batch is revised up to 3 times until it fits.</p></div>
+      <div class="card"><h3>Unusable clips are replaced</h3><p class="tiny">Bad cut, caption error, wrong crop: replaced free, no cap.</p></div>
+      <div class="card"><h3>Your $200 is a deposit</h3><p class="tiny">The pilot fee comes off your first month, so trying it costs nothing extra.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="kicker">Who this is for</div>
+    <h2>Brands that already have footage</h2>
+    <p class="lead">Skincare, hair, wellness, supplement and pet brands on Amazon, TikTok Shop or your own store, with a founder who talks on camera, product demos, UGC you own, a podcast or a YouTube channel. Also creators and coaches with long-form content who want short-form volume without hiring an editor.</p>
+    <p class="tiny">No footage yet? The AI spokesperson add-on covers it, or I'll script a 20-minute founder video you film on your phone, and clip from that.</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="kicker">FAQ</div>
+    <div class="faq" style="max-width:820px">
+      <details><summary>What counts as a clip?</summary><p>A finished, posting-ready 9:16 video, 8–60 seconds, cut from your footage at a moment chosen for its hook, with the speaker kept in frame, captions, an on-screen hook line and a music bed where it fits. Each cut ships with two or three different opening hooks; every variant counts as one clip, because each is a separate post.</p></details>
+      <details><summary>Who owns the clips?</summary><p>You do, outright, once the invoice is paid. I keep the right to show them as examples unless you say no.</p></details>
+      <details><summary>Where do the clips get posted on the Distribution plans?</summary><p>On pages I run and on vetted clippers' pages, not on your accounts (unless you ask). Every paid post carries #ad or a paid-partnership label.</p></details>
+      <details><summary>What is a "verified view"?</summary><p>A platform-reported view on a post that stayed live for 30 days, from a page with a majority tier-1 audience, with engagement above the platform floor and no paid boosting. Same rules the large clipping campaigns use. I log them at 72 hours and 30 days and you see the log.</p></details>
+      <details><summary>Can I use the clips in paid ads?</summary><p>Yes, on every plan.</p></details>
+      <details><summary>What if a clip says something we can't claim?</summary><p>Your brief lists approved and banned claims. Every batch is checked against it before delivery, and anything that slips through is replaced.</p></details>
+      <details><summary>How fast?</summary><p>First batch within 7 days of the brief. Weekly batches after that. Rush to 48 hours is an add-on.</p></details>
+      <details><summary>What do you need from me?</summary><p>The footage (or links), the product link, the claims you're allowed to make, and one round of notes on the first batch. After that, most clients spend under an hour a month on it.</p></details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Next step</div>
+    <h2>Start with the pilot: 25 clips from one video, $200, 7 days.</h2>
+    <p class="lead">Or book 30 minutes and we'll pick your first sources together.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:evan2harris2@gmail.com?subject=memecpm%20pilot">Start the pilot</a>
+      <a class="btn btn-ghost" href="#booking">Book a call</a>
+    </div>
+    <p class="tiny" style="margin-top:18px">Or reach me directly: Email <a href="mailto:evan2harris2@gmail.com">evan2harris2@gmail.com</a> · Discord <strong>evannn4323</strong></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Sales figures are from the Levanta dashboard (Amazon Attribution, US). Example videos on this page are labelled AI-generated where they are. Paid posts carry a clear #ad or paid-partnership label.<br>
+    © memecpm · <a href="/clippers">For clippers</a> · <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+
+</body>
+</html>

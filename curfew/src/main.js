@@ -218,7 +218,7 @@ function restoreCheckpoint() {
   game.player.yaw = c.yaw;
   game.player.applyCamera(0);
   // Patrol count as it was, but everyone starts far from you.
-  game.enforcers.forEach((e) => { e.pos.set(-100, 0, -100); e.sync(); });
+  game.enforcers.forEach((e) => e.remove(game.scene, game.world));
   game.enforcers = [];
   for (let i = 0; i < c.enforcers; i++) {
     const far = farOpenCell(10);

@@ -6,6 +6,9 @@ import * as tex from './textures.js';
 // to the hanging lamps nearest the player. Keeps integrated GPUs happy on the
 // large levels (every extra light costs every pixel).
 const LIGHT_POOL = 6;
+// Same idea for flashlight/camera beams: a few real spotlights follow the
+// nearest patrols and cameras; the rest only draw their translucent cone.
+const SPOT_POOL = 4;
 
 // Builds all static geometry for a parsed level and returns handles to the
 // animated/interactive bits (lights, lockers, doors, key, cameras, exit hatch).
@@ -190,7 +193,16 @@ export function buildWorld(scene, level) {
     hatch = { group, ringMat, pos: group.position };
   }
 
-  const world = { lights, pool, lockers, doors, keys, hatch, size: { W, H } };
+  const spots = [];
+  for (let i = 0; i < SPOT_POOL; i++) {
+    const sl = new THREE.SpotLight(0xffffff, 0, 20, 0.6, 0.45, 1.25);
+    scene.add(sl);
+    scene.add(sl.target);
+    spots.push(sl);
+  }
+
+  // Beam sources (patrols, cameras) register here; see Enforcer/SecurityCamera.
+  const world = { lights, pool, spots, beams: [], lockers, doors, keys, hatch, size: { W, H } };
 
   // Per-frame: flicker, assign the light pool to the nearest lamps, animate doors.
   world.update = (dt, playerPos) => {
@@ -214,6 +226,24 @@ export function buildWorld(scene, level) {
         pool[i].position.copy(l.pos);
         pool[i].intensity = l.intensity;
         l.light = pool[i];
+      });
+    }
+    if (spots.length) {
+      const live = world.beams
+        .filter((b) => b.on)
+        .map((b) => ({ b, d: b.pos.distanceToSquared(playerPos) }))
+        .sort((a, c) => a.d - c.d)
+        .slice(0, spots.length);
+      spots.forEach((sl, i) => {
+        const src = live[i]?.b;
+        if (!src) { sl.intensity = 0; return; }
+        sl.position.copy(src.pos);
+        sl.target.position.copy(src.target);
+        sl.color.setHex(src.color);
+        sl.intensity = src.intensity;
+        sl.angle = src.angle;
+        sl.distance = src.distance;
+        sl.penumbra = src.penumbra;
       });
     }
     for (const d of doors) {

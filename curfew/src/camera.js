@@ -36,11 +36,7 @@ export class SecurityCamera {
     const lens = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), this.lensMat);
     lens.position.set(0, 0, 0.32);
     this.head.add(lens);
-    this.light = new THREE.SpotLight(0xff3a2a, 18, RANGE + 2, HALF_FOV, 0.5, 1.3);
-    this.light.position.set(0, 0, 0.2);
-    this.light.target.position.set(0, -2.6, 6);
-    this.head.add(this.light);
-    this.head.add(this.light.target);
+    this.beam = { on: true, pos: this.pos.clone(), target: new THREE.Vector3(), color: 0xff3a2a, intensity: 18, angle: HALF_FOV, distance: RANGE + 2, penumbra: 0.5 };
     const len = 6;
     const coneGeo = new THREE.ConeGeometry(Math.tan(HALF_FOV) * len * 0.7, len, 18, 1, true);
     coneGeo.translate(0, -len / 2, 0);
@@ -77,8 +73,10 @@ export class SecurityCamera {
   update(dt, t, ctx) {
     this.cooldown = Math.max(0, this.cooldown - dt);
     this.alarm = Math.max(0, this.alarm - dt);
+    if (!this.registered && ctx.world) { ctx.world.beams.push(this.beam); this.registered = true; }
     this.yaw = this.baseYaw + Math.sin(t * 0.55 + this.phase) * SWEEP;
     this.head.rotation.y = this.yaw;
+    this.beam.target.set(this.pos.x + Math.sin(this.yaw) * 6, this.pos.y - 2.6, this.pos.z + Math.cos(this.yaw) * 6);
 
     const v = this.cooldown > 0 ? 0 : this.sees(ctx.player, ctx.world);
     if (v > 0) this.detection = Math.min(1, this.detection + v * 1.1 * dt);
@@ -93,8 +91,8 @@ export class SecurityCamera {
     const hot = this.alarm > 0;
     const col = hot ? 0xffffff : this.detection > 0.3 ? 0xff8a1a : 0xff3a2a;
     this.lensMat.color.setHex(col);
-    this.light.color.setHex(col);
-    this.light.intensity = hot ? 40 + Math.sin(t * 30) * 20 : 18;
+    this.beam.color = col;
+    this.beam.intensity = hot ? 40 + Math.sin(t * 30) * 20 : 18;
     this.beamMat.opacity = hot ? 0.09 : 0.035;
   }
 }

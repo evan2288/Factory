@@ -54,12 +54,13 @@ export class Enforcer {
     band.rotation.z = Math.PI / 2;
     g.add(band);
 
-    // Flashlight held at chest height, plus a faint visible beam.
-    this.light = new THREE.SpotLight(STATE_COLORS.patrol, 55, VIEW_DIST + 3, FOV, 0.45, 1.25);
-    this.light.position.set(0.2, 1.35, 0.3);
-    this.light.target.position.set(0.2, 0.6, 6);
-    g.add(this.light);
-    g.add(this.light.target);
+    // Flashlight held at chest height: a virtual beam the world's spotlight
+    // pool renders when this patrol is among the nearest, plus a faint visible cone.
+    this.beam = {
+      on: true, pos: new THREE.Vector3(), target: new THREE.Vector3(),
+      color: STATE_COLORS.patrol, intensity: 55, angle: FOV, distance: VIEW_DIST + 3, penumbra: 0.45,
+      localPos: new THREE.Vector3(0.2, 1.35, 0.3), localTarget: new THREE.Vector3(0.2, 0.6, 6),
+    };
 
     const len = 7;
     const coneGeo = new THREE.ConeGeometry(Math.tan(FOV) * len * 0.8, len, 24, 1, true);
@@ -70,7 +71,7 @@ export class Enforcer {
       blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
     });
     const beam = new THREE.Mesh(coneGeo, this.beamMat);
-    beam.position.copy(this.light.position);
+    beam.position.copy(this.beam.localPos);
     g.add(beam);
 
     this.group = g;
@@ -81,6 +82,18 @@ export class Enforcer {
   sync() {
     this.group.position.copy(this.pos);
     this.group.rotation.y = this.yaw;
+    const c = Math.cos(this.yaw);
+    const s = Math.sin(this.yaw);
+    const b = this.beam;
+    b.pos.set(this.pos.x + b.localPos.x * c + b.localPos.z * s, b.localPos.y, this.pos.z - b.localPos.x * s + b.localPos.z * c);
+    b.target.set(this.pos.x + b.localTarget.x * c + b.localTarget.z * s, b.localTarget.y, this.pos.z - b.localTarget.x * s + b.localTarget.z * c);
+  }
+
+  remove(scene, world) {
+    scene.remove(this.group);
+    this.beam.on = false;
+    const i = world?.beams.indexOf(this.beam);
+    if (i >= 0) world.beams.splice(i, 1);
   }
 
   setState(s, ctx) {
@@ -88,7 +101,7 @@ export class Enforcer {
     const prev = this.state;
     this.state = s;
     const col = STATE_COLORS[s];
-    this.light.color.setHex(col);
+    this.beam.color = col;
     this.visorMat.color.setHex(col);
     this.beamMat.color.setHex(col);
     this.beamMat.opacity = s === 'chase' ? 0.08 : 0.045;
@@ -201,6 +214,7 @@ export class Enforcer {
 
   update(dt, ctx) {
     const { player } = ctx;
+    if (!this.registered && ctx.world) { ctx.world.beams.push(this.beam); this.registered = true; }
     const vis = this.visibility(ctx);
     const seen = vis > 0;
     const d = this.difficulty;

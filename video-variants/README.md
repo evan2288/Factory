@@ -8,7 +8,8 @@ and files them in Google Drive under **AI Influencers / katie / BANK** with a tr
 - **Its own on-screen text.** All 10 variants of a clip have a different headline, body line and
   call to action ("(read caption)", "Read caption ↓", "Here's the list ↓"...), laid out like the
   reference screenshots. Lines are matched to what the clip shows (wall sit, skincare, makeup, hair,
-  fitness, dance, fashion, morning, city, glow, couple). Edit them in `engine/hooks.py`.
+  fitness, dance, fashion, morning, city, glow, couple) but every line is a health habit or tip
+  in the "I'm 65" voice; none are about makeup, hair or fashion. Edit them in `engine/hooks.py`.
 - **Its own look**: 4 font styles (TikTok Classic, condensed, Impact-style headline, all caps),
   sizes from 92% to 112%, and white, cream, yellow or a pastel picked to suit the clip's colours.
   Some variants put the CTA in a solid white box.

@@ -259,8 +259,9 @@ def main():
 
     state_path = os.path.join(WORK, "state.json")
     state = json.load(open(state_path)) if os.path.exists(state_path) else {}
-    if a.redo:  # forget what is done: every clip gets rendered and re-uploaded (same file names)
-        state = {k: v for k, v in state.items() if k not in {s["source_id"] for s in sources}}
+    if a.redo:  # forget what is done: these clips get rendered and re-uploaded (same file names)
+        redo_ids = set(a.only) or {s["source_id"] for s in sources}
+        state = {k: v for k, v in state.items() if k not in redo_ids}
     if not a.no_upload and not a.redo:
         # a fresh machine has no state.json: count clips already complete in BANK
         for s in sources:

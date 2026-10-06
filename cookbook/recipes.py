@@ -431,3 +431,32 @@ HOOKS = [
     "POV: you grew up with this and didn't know it was weird.", "Things I eat that make my boyfriend leave the room.", "Tell me it's not just me.", "The internet was right about this one.",
     "I tested the viral ___ so you don't have to.", "Day 12 of weird food combos that actually work.",
 ]
+
+# Allergen tagging: keyword (lowercase, substring) -> allergen label. "Check labels" items vary by brand.
+ALLERGEN_RULES = [
+    (["peanut"], "peanuts"),
+    (["pistachio", "almond", "walnut", "cashew", "pecan", "hazelnut", "crushed nuts"], "tree nuts"),
+    (["butter", "milk", "cheese", "cheddar", "feta", "mozzarella", "parmesan", "provolone", "mascarpone", "cream", "yogurt", "ice cream", "ranch", "caramel", "brioche", "whipped", "ghee", "paneer", "chocolate"], "dairy"),
+    (["egg", "mayo", "kewpie", "brioche", "ranch"], "eggs"),
+    (["flour", "bread", "sourdough", "bun", "flour tortilla", "pasta", "ramen", "panko", "pretzel", "oreo", "kataifi", "pita", "baguette", "hoagie", "naan", "pizza", "cracker", "soy sauce", "toast", "filo", "ladyfinger", "oats", "oat flour", "imitation crab", "gochujang"], "wheat/gluten"),
+    (["soy", "miso", "tofu", "edamame", "gochujang", "chili crisp", "oreo", "chocolate", "kimchi"], "soy"),
+    (["fish sauce", "imitation crab", "salmon", "furikake", "kimchi", "tuna", "anchov"], "fish/shellfish"),
+    (["sesame", "tahini", "everything bagel", "furikake", "za'atar", "zaatar"], "sesame"),
+]
+CHECK_LABEL = ["chili crisp", "chocolate", "kimchi", "gochujang", "oreo", "caramel", "ranch", "imitation crab", "oats", "miso", "furikake", "everything bagel", "protein powder", "magnesium"]
+
+
+def allergens(recipe):
+    text = " | ".join(recipe["ingredients"]).lower().replace("cornflour", "cornstarch").replace("corn flour", "cornstarch")
+    found = []
+    for keys, label in ALLERGEN_RULES:
+        if any(k in text for k in keys) and label not in found:
+            found.append(label)
+    # Peanut butter is dairy-free; a recipe whose only "butter" hit is "peanut butter" isn't dairy.
+    if "dairy" in found and not any(k in text.replace("peanut butter", "").replace("pistachio butter", "") for k in ["butter", "milk", "cheese", "cheddar", "feta", "mozzarella", "parmesan", "provolone", "mascarpone", "cream", "yogurt", "ice cream", "ranch", "caramel", "brioche", "whipped", "ghee", "chocolate"]):
+        found.remove("dairy")
+    # Corn tortillas are gluten-free; only flour tortillas count.
+    if "wheat/gluten" in found and "tortilla" in text and "flour tortilla" not in text and not any(k in text for k in ["flour,", "flour\"", " flour", "bread", "bun", "pasta", "ramen", "panko", "pretzel", "oreo", "kataifi", "pita", "baguette", "hoagie", "naan", "pizza", "cracker", "soy sauce", "toast", "oats", "gochujang", "imitation crab"]):
+        found.remove("wheat/gluten")
+    check = any(k in text for k in CHECK_LABEL)
+    return found, check

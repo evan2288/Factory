@@ -1,1 +1,4 @@
 out/*.html
+out/thumbs-*/
+out/sheet-*.jpg
+out/*.png

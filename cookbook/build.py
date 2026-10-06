@@ -6,11 +6,11 @@ import argparse
 import html
 import os
 
-from recipes import CHAPTERS, RECIPES, FREE_IDS, PANTRY, PRINCIPLES, HOOKS
+from recipes import CHAPTERS, RECIPES, FREE_IDS, PANTRY, PRINCIPLES, HOOKS, allergens
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--author", default="")
-ap.add_argument("--price", default="19")
+ap.add_argument("--price", default="9")
 ap.add_argument("--link", default="link in bio")
 args = ap.parse_args()
 
@@ -77,6 +77,12 @@ body { font-family: 'DM Sans', system-ui, sans-serif; color: #15161a; background
 .film .cap { margin-top: 12px; font-size: 12.5px; line-height: 1.45; color: #3c3f48; }
 .film .cap b { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; color: #15161a; }
 .film .texts span { background: #15161a; color: #fff; border-radius: 999px; padding: 4px 10px; font-size: 11.5px; font-weight: 500; }
+.allergens { margin-top: 12px; font-size: 11px; line-height: 1.9; }
+.allergens b { display: block; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #6b6f7a; line-height: 1.4; margin-bottom: 3px; }
+.allergens span { display: inline-block; margin: 0 4px 3px 0; padding: 1px 8px; border-radius: 999px; background: #f0f1f4; color: #3c3f48; }
+.allergens span.pn { background: #FF5A5F; color: #fff; font-weight: 700; }
+.allergens span.ck { background: transparent; border: 1px dashed #c7cad2; color: #6b6f7a; }
+.allergens span.ok { background: #DFF9F0; color: #0b6b4f; }
 .tip { margin-top: 12px; font-size: 12.5px; color: #3c3f48; }
 .tip b { font-weight: 700; }
 
@@ -109,7 +115,7 @@ body { font-family: 'DM Sans', system-ui, sans-serif; color: #15161a; background
 .cta h2 { margin: 0 0 8px; font-size: 32px; }
 .cta p { margin: 0 0 8px; font-size: 14px; }
 .cta .price { font-size: 48px; margin: 10px 0 2px; }
-.big-list { font-size: 15px; line-height: 1.65; margin: 10px 0 0 18px; padding: 0; }
+.big-list { font-size: 14px; line-height: 1.5; margin: 6px 0 0 18px; padding: 0; columns: 2; column-gap: 24px; }
 """
 
 
@@ -129,6 +135,11 @@ def recipe_page(r, pageno, with_film=True, free=False):
         film = (f'<div class="film" style="background:{c["tint"]}"><h3>Film it · 3 shots</h3><div class="grid">{shots}</div>'
                 f'<div class="texts">{texts}</div><div class="cap"><b>Caption starter</b>{E(caption)}</div></div>')
     tip = f'<div class="tip"><b>Tip.</b> {E(r["tip"])}</div>' if r.get("tip") else ""
+    al, check = allergens(r)
+    chips = "".join(f'<span class="{"pn" if a == "peanuts" else ""}">{E(a)}</span>' for a in al) or '<span class="ok">no major allergens</span>'
+    if check:
+        chips += '<span class="ck">check labels</span>'
+    allergen_html = f'<div class="allergens"><b>Contains</b>{chips}</div>'
     return f"""
 <section class="page recipe" style="--c:{c['color']}">
   <div class="head"><div class="idn display" style="background:{c['color']}">{r['id']:02d}</div><h1 class="display">{E(r['name'])}</h1></div>
@@ -136,7 +147,7 @@ def recipe_page(r, pageno, with_film=True, free=False):
   <div class="hook" style="border-color:{c['color']}"><small>The hook</small>{E(r['hook'])}</div>
   <p class="why"><b>Why it works.</b> {E(r['why'])}</p>
   <div class="cols">
-    <div class="ing"><h3>Ingredients</h3><ul>{ing}</ul></div>
+    <div class="ing"><h3>Ingredients</h3><ul>{ing}</ul>{allergen_html}</div>
     <div class="steps"><h3>Method</h3><ol style="--c:{c['color']}">{steps}</ol>{tip}</div>
   </div>
   {film}
@@ -194,7 +205,9 @@ def build_paid():
 <p>The <b>weird score</b> is how much pushback you'll get in the comments. Ones and twos are crowd-pleasers. Fives are the ones that go viral because half the comments are "absolutely not" and the other half are "I tried it and I'm sorry I doubted you". Post the fives.</p>
 <h2>How to use the book</h2>
 <p>Start with the <b>Pantry</b> page: twenty ingredients cover most of the book. Then pick any chapter. The <b>30-day calendar</b> at the back gives you a recipe a day for a month if you don't want to think. The <b>hook bank</b> is for when you've run out of first lines.</p>
-<p class="hand" style="font-size:24px;color:#FF5A5F;margin-top:26px">Make the weird thing. Then film it.</p>
+<h2>Allergens, in plain terms</h2>
+<p>Every recipe lists what it contains from the big ones: <b>peanuts, tree nuts, dairy, eggs, wheat/gluten, soy, fish/shellfish and sesame</b>. Peanuts are flagged in red. "Check labels" means an ingredient varies by brand (chili crisp, chocolate, kimchi, gochujang, caramel, oats, protein powder). The lists are a guide, not a guarantee: read packaging, assume cross-contact in shared kitchens, and skip any recipe that isn't safe for you or the people you're feeding. Honey isn't for children under one. The mousse uses raw egg whites. Cook poultry to 74°C/165°F.</p>
+<p class="hand" style="font-size:24px;color:#FF5A5F;margin-top:18px">Make the weird thing. Then film it.</p>
 """, n)); n += 1
     # TOC
     toc = ""
@@ -288,7 +301,6 @@ def build_paid():
 <div class="blob" style="right:-1.4in;bottom:-1.2in;width:5in;height:5in;background:#06D6A0"></div></div>
 <div class="title display" style="font-size:72px;top:3.6in">Now go<br>make the<br>weird thing.</div>
 <div class="tag" style="top:7.6in">Post it. Tag the combo. Pin the recipe. Reply to the doubters.</div>
-<div class="author">{E(args.author) if args.author else 'Unhinged Kitchen'}</div>
 </section>""")
     return "".join(pages), n
 
@@ -308,7 +320,9 @@ def build_free():
 <p>The <b>weird score</b> is how much pushback you'll get. Ones and twos are crowd-pleasers. Fives are the ones half your friends refuse to try and then ask for the recipe.</p>
 <h2>What's in here</h2>
 <ol class="big-list">{"".join(f"<li>{E(r['name'])}</li>" for r in RECIPES if r.get('free'))}</ol>
-<p class="hand" style="font-size:24px;color:#FF5A5F;margin-top:22px">Make the weird thing.</p>
+<h2>Allergens</h2>
+<p>Each recipe lists what it contains from the big eight (peanuts, tree nuts, dairy, eggs, wheat/gluten, soy, fish/shellfish, sesame). "Check labels" means it depends on the brand. It's a guide, not a guarantee: read packaging and skip anything that isn't safe for you.</p>
+<p class="hand" style="font-size:24px;color:#FF5A5F;margin-top:18px">Make the weird thing.</p>
 """, n, free=True)); n += 1
     for r in [r for r in RECIPES if r.get("free")]:
         pages.append(recipe_page(r, n, with_film=False, free=True)); n += 1

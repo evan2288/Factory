@@ -230,7 +230,7 @@ RECIPES = [
     dict(id=30, chapter="texture", name="Crispy Rice Salad", weird=2, time=30, serves=4, free=True,
          hook="Leftover rice, baked until it shatters, in a salad. The sound is the recipe.",
          why="Crunchy rice against soft herbs and a sour-sweet dressing. Texture contrast is the whole point.",
-         ingredients=["2 cups cooked rice, cold (day-old is best)", "2 tbsp oil", "1 cucumber, diced", "1 cup edamame", "Handful mint and coriander", "Dressing: 2 tbsp lime juice, 1 tbsp fish sauce or soy, 1 tbsp honey, 1 tsp chili crisp", "Peanuts"],
+         ingredients=["2 cups cooked rice, cold (day-old is best)", "2 tbsp oil", "1 cucumber, diced", "1 cup edamame", "Handful mint and coriander", "Dressing: 2 tbsp lime juice, 1 tbsp fish sauce or soy sauce, 1 tbsp honey, 1 tsp chili crisp", "Peanuts"],
          steps=["Toss the rice with oil and spread thin on a tray. Bake 25 minutes at 220°C/425°F, stirring once, until golden and crunchy.", "Mix the dressing.", "Toss cucumber, edamame and herbs with the dressing; add the crispy rice right before eating.", "Peanuts on top."],
          film=["Shot 1: the rice tray, golden, crackling.", "Shot 2: dressing shaken in a jar.", "Shot 3: the toss and the crunch, mic close."],
          text=["crispy rice salad", "leftover rice glow-up", "the sound"]),
@@ -351,7 +351,7 @@ RECIPES = [
          steps=["Melt the chocolate; stir in the olive oil and the egg yolks.", "Whisk whites with the sugar and salt to soft peaks.", "Fold whites into the chocolate in three goes, gently.", "Spoon into glasses, chill 2 hours. Flaky salt and a thread of oil on top."],
          film=["Shot 1: oil swirling into melted chocolate.", "Shot 2: the fold, streaks disappearing.", "Shot 3: the spoon into the set mousse."],
          text=["olive oil chocolate mousse", "4 ingredients", "restaurant texture"],
-         tip="This uses raw egg whites; use fresh eggs and skip it if you avoid raw egg."),
+         tip="Room-temperature whites whip faster and fuller. Use a spotless bowl: any grease or yolk stops them peaking."),
     dict(id=47, chapter="drinks-dessert", name="Tiramisu Oreo Cups", weird=2, time=20, serves=4,
          hook="Tiramisu for people who don't own ladyfingers.",
          why="Oreos soaked in coffee go cake-soft; mascarpone and cream are the rich layer; cocoa is the bitter top. Same architecture, five minutes of effort.",
@@ -376,7 +376,7 @@ RECIPES = [
     dict(id=50, chapter="drinks-dessert", name="Miso Caramel Latte", weird=4, time=8, serves=1,
          hook="The salted caramel latte with a secret: the salt is miso.",
          why="Miso's salt and umami make caramel taste deeper and less sugary; in milk and espresso it reads like a grown-up caramel latte.",
-         ingredients=["1 double espresso", "200 ml milk", "2 tbsp miso caramel (page 26) or 1 tbsp caramel sauce + 1/2 tsp white miso", "Ice (optional)"],
+         ingredients=["1 double espresso", "200 ml milk", "2 tbsp miso caramel (recipe 26) or 1 tbsp caramel sauce + 1/2 tsp white miso", "Ice (optional)"],
          steps=["Stir the miso caramel into the hot espresso until dissolved.", "Steam or froth the milk (or shake with ice for iced).", "Pour the milk over the espresso. A thread of caramel on the foam."],
          film=["Shot 1: caramel stirred into dark espresso.", "Shot 2: the milk pour, the colour change.", "Shot 3: the caramel drizzle on the foam."],
          text=["miso caramel latte", "the salt is miso", "café drink at home"]),
@@ -443,20 +443,90 @@ ALLERGEN_RULES = [
     (["fish sauce", "imitation crab", "salmon", "furikake", "kimchi", "tuna", "anchov"], "fish/shellfish"),
     (["sesame", "tahini", "everything bagel", "furikake", "za'atar", "zaatar"], "sesame"),
 ]
-CHECK_LABEL = ["chili crisp", "chocolate", "kimchi", "gochujang", "oreo", "caramel", "ranch", "imitation crab", "oats", "miso", "furikake", "everything bagel", "protein powder", "magnesium"]
+# Ingredients whose allergens vary by brand: (keyword, what to call it on the page).
+CHECK_LABEL = [
+    ("chili crisp", "chili crisp"), ("chocolate", "chocolate"), ("kimchi", "kimchi"), ("gochujang", "gochujang"),
+    ("oreo", "Oreos"), ("caramel", "caramel"), ("ranch", "ranch"), ("imitation crab", "imitation crab"),
+    ("oats", "oats"), ("oat flour", "oats"), ("miso", "miso"), ("furikake", "furikake"),
+    ("everything bagel", "everything seasoning"), ("protein powder", "protein powder"), ("magnesium", "magnesium powder"),
+    ("ice cream", "ice cream"), ("ramen", "ramen seasoning"), ("deli meat", "deli meats"), ("bun", "buns"),
+    ("naan", "naan"), ("pizza base", "pizza base"), ("stock", "stock"), ("pepperoni", "pepperoni"),
+    ("pistachio cream", "pistachio cream"), ("corn tortilla", "corn tortillas"), ("fish sauce", "fish sauce"),
+]
+
+DAIRY_WORDS = ["butter", "milk", "cheese", "cheddar", "feta", "mozzarella", "parmesan", "provolone", "mascarpone", "cream",
+               "yogurt", "ice cream", "ranch", "caramel", "brioche", "whipped", "ghee", "chocolate"]
+WHEAT_WORDS = ["flour,", "flour\"", " flour", "bread", "bun", "pasta", "ramen", "panko", "pretzel", "oreo", "kataifi", "pita",
+               "baguette", "hoagie", "naan", "pizza", "cracker", "soy sauce", "toast", "oats", "gochujang", "imitation crab"]
 
 
 def allergens(recipe):
+    """Returns (allergens found, ingredients to check on the label)."""
     text = " | ".join(recipe["ingredients"]).lower().replace("cornflour", "cornstarch").replace("corn flour", "cornstarch")
     found = []
     for keys, label in ALLERGEN_RULES:
         if any(k in text for k in keys) and label not in found:
             found.append(label)
     # Peanut butter is dairy-free; a recipe whose only "butter" hit is "peanut butter" isn't dairy.
-    if "dairy" in found and not any(k in text.replace("peanut butter", "").replace("pistachio butter", "") for k in ["butter", "milk", "cheese", "cheddar", "feta", "mozzarella", "parmesan", "provolone", "mascarpone", "cream", "yogurt", "ice cream", "ranch", "caramel", "brioche", "whipped", "ghee", "chocolate"]):
+    if "dairy" in found and not any(k in text.replace("peanut butter", "").replace("pistachio butter", "") for k in DAIRY_WORDS):
         found.remove("dairy")
     # Corn tortillas are gluten-free; only flour tortillas count.
-    if "wheat/gluten" in found and "tortilla" in text and "flour tortilla" not in text and not any(k in text for k in ["flour,", "flour\"", " flour", "bread", "bun", "pasta", "ramen", "panko", "pretzel", "oreo", "kataifi", "pita", "baguette", "hoagie", "naan", "pizza", "cracker", "soy sauce", "toast", "oats", "gochujang", "imitation crab"]):
+    if "wheat/gluten" in found and "tortilla" in text and "flour tortilla" not in text and not any(k in text for k in WHEAT_WORDS):
         found.remove("wheat/gluten")
-    check = any(k in text for k in CHECK_LABEL)
+    check = []
+    for k, name in CHECK_LABEL:
+        if k in text and name not in check:
+            check.append(name)
     return found, check
+
+
+# Flavour stats, 0-5 each: sweet, salty, sour, spicy, umami, crunch.
+PROFILE = {
+    1: "344315", 2: "243014", 3: "540004", 4: "530032", 5: "420101", 6: "433212", 7: "332033", 8: "242152",
+    9: "420323", 10: "342442", 11: "524201", 12: "530325", 13: "421313", 14: "333433", 15: "413302",
+    16: "403210", 17: "043135", 18: "343221", 19: "134234", 20: "022123", 21: "403001", 22: "044022",
+    23: "040151", 24: "430031", 25: "044344", 26: "530030", 27: "242342", 28: "232252", 29: "442354",
+    30: "234235", 31: "041045", 32: "421011", 33: "042244", 34: "510015", 35: "530012", 36: "043234",
+    37: "141023", 38: "030352", 39: "133342", 40: "430022", 41: "312001", 42: "033013", 43: "030235",
+    44: "304000", 45: "203000", 46: "320000", 47: "510001", 48: "530002", 49: "423200", 50: "420030",
+}
+assert sorted(PROFILE) == list(range(1, 51)) and all(len(v) == 6 and v.isdigit() for v in PROFILE.values())
+
+# Safety notes for recipes with a real hazard (hot oil, molten sugar, raw or runny egg, raw meat, caffeine, supplements).
+SAFETY = {
+    1: "Hot oil spits. Pat the pickles bone-dry, lower them in away from you and never leave the pan. Microwaved honey gets very hot.",
+    2: "Peanut allergy alert. Use a clean knife, board and jar if you're also making food for someone allergic.",
+    3: "Melted caramel stays hot for minutes and sticks to skin. Let it cool a little before touching the tray.",
+    4: "Raw dough has raw egg and raw flour, so bake it before eating. Oven gloves for the hot tray.",
+    8: "Cook beef mince until no pink remains (71°C/160°F). Bacon fat spits: keep your face and phone back from the pan.",
+    9: "Many chili crisps contain soy, and some contain peanuts or sesame. Read the jar before serving guests.",
+    10: "The oven and tray will be at full heat. Use oven gloves and keep the door clear of kids and pets.",
+    12: "Boiling sugar is far hotter than boiling water and foams up when the soda goes in. Big pan, long spoon, kids clear.",
+    13: "Under the grill, sugar goes from caramelised to burnt and smoking in seconds. Don't walk away.",
+    14: "Cook the mince right through: pork to 71°C/160°F, chicken to 74°C/165°F. Wash hands after handling it raw.",
+    15: "Wash your hands after handling chili and keep them away from your eyes.",
+    17: "Chicken must hit 74°C/165°F in the thickest piece. Bin the brine after soaking; never reuse it. Hot oil spits.",
+    19: "Smash with the flat of the knife, blade facing away from you, fingers clear of the edge.",
+    22: "Keep this creamy salad cold. Don't leave it out for more than 2 hours (1 hour on a hot day).",
+    23: "The eggs are only gently cooked by the noodles. Use pasteurised eggs for anyone pregnant, very young, older or immunocompromised.",
+    26: "Caramel runs at about 170°C/340°F and erupts when the cream goes in. Pour slowly at arm's length, long sleeves on.",
+    27: "The dish and its oil come out at 200°C/400°F. Oven gloves, and open the oven door away from your face.",
+    28: "Serve it hot and refrigerate leftovers within 2 hours. Fish, eggs, soy, wheat and sesame are all in this one.",
+    29: "Wings must reach 74°C/165°F. Fish sauce hitting hot caramel hisses and spits, so add it at arm's length.",
+    30: "Cool leftover rice fast, refrigerate it within an hour and use it within a day. Contains peanuts.",
+    31: "Don't overfill the air fryer, and never preheat it with an empty paper liner inside.",
+    32: "Rolled oats are heat-treated, which is why this is fine raw. Don't swap in raw wheat flour.",
+    33: "Cook beef mince until no pink remains (71°C/160°F). Hot fat spits, so keep your phone back from the pan.",
+    34: "Melted butter and chocolate burn. Tree nuts, sesame, wheat and dairy are all in this one.",
+    35: "Check every date for stones. Peanut allergy alert.",
+    38: "The jammy yolk stays runny. Use pasteurised eggs for anyone pregnant, very young, older or immunocompromised.",
+    39: "Cook the eggs until set for anyone vulnerable. Cool and refrigerate leftover rice within an hour.",
+    40: "Bacon fat spits, and a seared banana holds heat like lava. Let it cool a minute before biting.",
+    41: "Protein powders vary: check the label for dairy, soy and serving size. Not for young kids.",
+    43: "Waffle irons get very hot and steam hard when opened. Lift the lid away from you.",
+    44: "Magnesium isn't for everyone: ask a doctor or pharmacist if you're pregnant, on medication or have kidney issues. Not for kids.",
+    45: "A double espresso has roughly 120-150 mg of caffeine. Not for kids; count it toward your limit if pregnant.",
+    46: "The eggs stay raw, yolks and whites. Use pasteurised eggs, and skip it for anyone pregnant, very young, older or immunocompromised.",
+    47: "Contains coffee. Use decaf if kids are eating it.",
+    50: "Contains caffeine. Making the caramel fresh? Read the safety note on recipe 26 first.",
+}
